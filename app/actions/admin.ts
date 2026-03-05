@@ -3,11 +3,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { generateWeeklyEcosystemReport } from "@/lib/ai/groq";
+import { requireRateLimit, RATE_LIMITS } from "@/lib/utils/rate-limit";
+import { requireAdmin } from "@/lib/auth/session";
 
 /**
  * Get comprehensive KPI metrics for admin dashboard
  */
 export async function getAdminKPIs() {
+  await requireAdmin();
   const supabase = await createClient();
 
   // Total students, mentors, investors
@@ -118,6 +121,7 @@ export async function getAdminKPIs() {
  * Get ecosystem charts data
  */
 export async function getEcosystemCharts() {
+  await requireAdmin();
   const supabase = await createClient();
 
   // Startup stage distribution
@@ -193,6 +197,14 @@ export async function getEcosystemCharts() {
  */
 export async function generateEcosystemInsight() {
   const supabase = await createClient();
+  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  // Rate limit expensive AI insights generation
+  await requireRateLimit(user.id, RATE_LIMITS.AI_GROQ_INSIGHTS);
 
   // Check cache first
   const { data: cached } = await supabase
@@ -249,6 +261,7 @@ export async function generateEcosystemInsight() {
  * Get recent activity log for admin monitoring
  */
 export async function getRecentActivity(limit: number = 50) {
+  await requireAdmin();
   const supabase = await createClient();
 
   const { data, error } = await supabase

@@ -1,17 +1,21 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { getMyNotifications, markAsRead, markAllAsRead } from '@/app/actions/notifications'
-import NotificationList from '@/components/notifications/NotificationList'
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import {
+  getMyNotifications,
+  markAsRead,
+  markAllAsRead,
+} from "@/app/actions/notifications";
+import NotificationList from "@/components/notifications/NotificationList";
 
 export default async function StudentNotificationsPage() {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
-  if (!user) redirect('/sign-in')
+  if (!user) redirect("/sign-in");
 
-  const notifications = await getMyNotifications(50)
+  const notifications = await getMyNotifications(50);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950 p-8">
@@ -40,5 +44,5 @@ export default async function StudentNotificationsPage() {
         <NotificationList notifications={notifications} />
       </div>
     </div>
-  )
+  );
 }

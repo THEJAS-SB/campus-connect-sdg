@@ -1,33 +1,38 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import type { Badge, UserBadge } from '@/lib/gamification/badges'
-import ShareButton from './ShareButton'
+import { useState, useEffect } from "react";
+import type { Badge, UserBadge } from "@/lib/gamification/badges";
+import ShareButton from "./ShareButton";
 
 interface BadgeShowcaseProps {
-  userBadges: UserBadge[]
-  allBadges: Badge[]
-  progress: { badge: Badge; progress: number; target: number; earned: boolean }[]
+  userBadges: UserBadge[];
+  allBadges: Badge[];
+  progress: {
+    badge: Badge;
+    progress: number;
+    target: number;
+    earned: boolean;
+  }[];
 }
 
 const BADGE_ICONS: Record<string, string> = {
-  'First Step': '👋',
-  'Idea Machine': '💡',
-  'MVP Maker': '🛠️',
-  'Revenue Ready': '💰',
-  'Funded!': '🚀',
-  'Mission Master': '🎯',
-  'Streak Keeper': '🔥',
-  'Networking Pro': '🤝',
-  'Innovation Leader': '👑',
-}
+  "First Step": "👋",
+  "Idea Machine": "💡",
+  "MVP Maker": "🛠️",
+  "Revenue Ready": "💰",
+  "Funded!": "🚀",
+  "Mission Master": "🎯",
+  "Streak Keeper": "🔥",
+  "Networking Pro": "🤝",
+  "Innovation Leader": "👑",
+};
 
 export default function BadgeShowcase({
   userBadges,
   allBadges,
   progress,
 }: BadgeShowcaseProps) {
-  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null)
+  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
 
   return (
     <div className="space-y-6">
@@ -38,10 +43,10 @@ export default function BadgeShowcase({
         </h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {allBadges.map((badge) => {
-            const userBadge = userBadges.find((ub) => ub.badge_id === badge.id)
-            const badgeProgress = progress.find((p) => p.badge.id === badge.id)
-            const isEarned = !!userBadge
-            const icon = BADGE_ICONS[badge.name] ?? '🏅'
+            const userBadge = userBadges.find((ub) => ub.badge_id === badge.id);
+            const badgeProgress = progress.find((p) => p.badge.id === badge.id);
+            const isEarned = !!userBadge;
+            const icon = BADGE_ICONS[badge.name] ?? "🏅";
 
             return (
               <button
@@ -49,14 +54,14 @@ export default function BadgeShowcase({
                 onClick={() => setSelectedBadge(badge)}
                 className={`group relative overflow-hidden rounded-xl border p-5 text-center transition ${
                   isEarned
-                    ? 'border-amber-500/30 bg-amber-500/10 hover:border-amber-500/50'
-                    : 'border-white/10 bg-white/5 opacity-60 hover:opacity-80'
+                    ? "border-amber-500/30 bg-amber-500/10 hover:border-amber-500/50"
+                    : "border-white/10 bg-white/5 opacity-60 hover:opacity-80"
                 }`}
               >
                 {/* Badge Icon */}
                 <div
                   className={`mx-auto text-5xl transition group-hover:scale-110 ${
-                    isEarned ? '' : 'grayscale'
+                    isEarned ? "" : "grayscale"
                   }`}
                 >
                   {icon}
@@ -65,7 +70,7 @@ export default function BadgeShowcase({
                 {/* Badge Name */}
                 <p
                   className={`mt-3 text-sm font-semibold ${
-                    isEarned ? 'text-amber-300' : 'text-slate-500'
+                    isEarned ? "text-amber-300" : "text-slate-500"
                   }`}
                 >
                   {badge.name}
@@ -74,9 +79,9 @@ export default function BadgeShowcase({
                 {/* Earned Date */}
                 {isEarned && userBadge && (
                   <p className="mt-1 text-xs text-slate-400">
-                    {new Date(userBadge.earned_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
+                    {new Date(userBadge.earned_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
                     })}
                   </p>
                 )}
@@ -89,8 +94,9 @@ export default function BadgeShowcase({
                         className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
                         style={{
                           width: `${Math.min(
-                            (badgeProgress.progress / badgeProgress.target) * 100,
-                            100
+                            (badgeProgress.progress / badgeProgress.target) *
+                              100,
+                            100,
                           )}%`,
                         }}
                       />
@@ -101,7 +107,7 @@ export default function BadgeShowcase({
                   </div>
                 )}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -124,13 +130,21 @@ export default function BadgeShowcase({
             </button>
 
             <div className="text-center">
-              <p className="text-6xl">{BADGE_ICONS[selectedBadge.name] ?? '🏅'}</p>
-              <h3 className="mt-4 text-xl font-bold text-white">{selectedBadge.name}</h3>
-              <p className="mt-2 text-sm text-slate-400">{selectedBadge.description}</p>
+              <p className="text-6xl">
+                {BADGE_ICONS[selectedBadge.name] ?? "🏅"}
+              </p>
+              <h3 className="mt-4 text-xl font-bold text-white">
+                {selectedBadge.name}
+              </h3>
+              <p className="mt-2 text-sm text-slate-400">
+                {selectedBadge.description}
+              </p>
 
               {/* Criteria */}
               <div className="mt-4 rounded-lg bg-white/5 p-3">
-                <p className="text-xs font-semibold text-slate-300">How to Earn</p>
+                <p className="text-xs font-semibold text-slate-300">
+                  How to Earn
+                </p>
                 <p className="mt-1 text-xs text-slate-400">
                   {formatCriteria(selectedBadge.criteria)}
                 </p>
@@ -139,11 +153,11 @@ export default function BadgeShowcase({
               {/* Progress */}
               {(() => {
                 const badgeProgress = progress.find(
-                  (p) => p.badge.id === selectedBadge.id
-                )
+                  (p) => p.badge.id === selectedBadge.id,
+                );
                 if (badgeProgress && !badgeProgress.earned) {
                   const percentage =
-                    (badgeProgress.progress / badgeProgress.target) * 100
+                    (badgeProgress.progress / badgeProgress.target) * 100;
                   return (
                     <div className="mt-4">
                       <div className="flex items-center justify-between text-xs text-slate-400">
@@ -159,12 +173,14 @@ export default function BadgeShowcase({
                         />
                       </div>
                     </div>
-                  )
+                  );
                 } else if (badgeProgress?.earned) {
                   return (
                     <div className="mt-4 space-y-3">
                       <div className="rounded-lg bg-green-500/10 p-3 ring-1 ring-green-500/30">
-                        <p className="text-sm font-semibold text-green-400">✅ Earned!</p>
+                        <p className="text-sm font-semibold text-green-400">
+                          ✅ Earned!
+                        </p>
                       </div>
                       <div className="flex justify-center">
                         <ShareButton
@@ -173,42 +189,42 @@ export default function BadgeShowcase({
                         />
                       </div>
                     </div>
-                  )
+                  );
                 }
-                return null
+                return null;
               })()}
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function formatCriteria(criteria: {
-  type: string
-  count?: number
-  stage?: string
-  threshold?: number
+  type: string;
+  count?: number;
+  stage?: string;
+  threshold?: number;
 }): string {
-  const { type, count, stage, threshold } = criteria
+  const { type, count, stage, threshold } = criteria;
 
   switch (type) {
-    case 'profile_complete':
-      return 'Complete your profile with name, bio, skills, and SDGs'
-    case 'startup_created':
-      return `Create ${count === 1 ? 'your first startup' : `${count} startups`}`
-    case 'startup_stage':
-      return `Progress your startup to ${stage} stage`
-    case 'missions_completed':
-      return `Complete ${count} daily missions`
-    case 'streak_days':
-      return `Maintain a ${count}-day login streak`
-    case 'mentor_connections':
-      return `Connect with ${count} mentors`
-    case 'innovation_score':
-      return `Reach ${threshold} innovation score`
+    case "profile_complete":
+      return "Complete your profile with name, bio, skills, and SDGs";
+    case "startup_created":
+      return `Create ${count === 1 ? "your first startup" : `${count} startups`}`;
+    case "startup_stage":
+      return `Progress your startup to ${stage} stage`;
+    case "missions_completed":
+      return `Complete ${count} daily missions`;
+    case "streak_days":
+      return `Maintain a ${count}-day login streak`;
+    case "mentor_connections":
+      return `Connect with ${count} mentors`;
+    case "innovation_score":
+      return `Reach ${threshold} innovation score`;
     default:
-      return 'Complete the required criteria'
+      return "Complete the required criteria";
   }
 }

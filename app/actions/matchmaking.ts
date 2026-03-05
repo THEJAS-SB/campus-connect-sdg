@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { generateProfileEmbedding } from '@/lib/ai/embeddings'
 import { findMentorsForStudent, findSimilarProfiles } from '@/lib/ai/matchmaking'
 import { generateMatchReasoning } from '@/lib/ai/groq'
+import { requireRateLimit, RATE_LIMITS } from '@/lib/utils/rate-limit'
 
 export async function getStudentMentorMatches() {
   const supabase = await createClient()
@@ -12,6 +13,9 @@ export async function getStudentMentorMatches() {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
+
+  // Rate limit AI-powered matchmaking
+  await requireRateLimit(user.id, RATE_LIMITS.AI_GROQ_MATCHMAKING)
 
   const { data: profile } = await supabase
     .from('profiles')

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { generateDailyMissions } from "@/lib/ai/missions";
 import { checkAndAwardBadges } from "@/lib/gamification/badges";
+import { requireRateLimit, RATE_LIMITS } from "@/lib/utils/rate-limit";
 
 export async function fetchOrGenerateMissions() {
   const supabase = await createClient();
@@ -11,6 +12,9 @@ export async function fetchOrGenerateMissions() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
+
+  // Rate limit AI mission generation
+  await requireRateLimit(user.id, RATE_LIMITS.AI_GROQ_MISSIONS);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -65,7 +69,7 @@ export async function fetchOrGenerateMissions() {
     )
     .select();
 
-  revalidatePath('/student/missions');
+  revalidatePath("/student/missions");
   return inserted ?? [];
 }
 
@@ -120,8 +124,8 @@ export async function completeMission(missionId: string) {
   // Check for newly earned badges
   await checkAndAwardBadges(user.id);
 
-  revalidatePath('/student/missions');
-  revalidatePath('/student');
-  
+  revalidatePath("/student/missions");
+  revalidatePath("/student");
+
   return { xp_awarded: mission.xp_reward, new_score: newScore };
 }

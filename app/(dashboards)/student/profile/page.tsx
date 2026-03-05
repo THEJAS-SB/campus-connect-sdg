@@ -161,7 +161,7 @@ export default async function StudentProfilePage() {
             </h2>
             <CheckBadgesButton />
           </div>
-          <BadgeShowcase 
+          <BadgeShowcase
             userBadges={earned}
             allBadges={all}
             progress={progress}
@@ -185,9 +185,7 @@ export default async function StudentProfilePage() {
           </div>
 
           <div className="rounded-xl border border-yellow-500/20 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-6 text-center backdrop-blur-sm">
-            <div className="text-3xl font-bold text-white">
-              {earned.length}
-            </div>
+            <div className="text-3xl font-bold text-white">{earned.length}</div>
             <div className="mt-1 text-sm text-slate-400">Badges Earned</div>
           </div>
         </div>

@@ -1,45 +1,49 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import Sidebar from '@/components/shared/Sidebar'
-import { updateLoginStreak } from '@/lib/gamification/streak'
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import Sidebar from "@/components/shared/Sidebar";
+import { updateLoginStreak } from "@/lib/gamification/streak";
 
 const NAV_ITEMS = [
-  { href: '/student', label: 'Dashboard', icon: '🏠' },
-  { href: '/student/startup', label: 'My Startup', icon: '🚀' },
-  { href: '/student/missions', label: 'Daily Missions', icon: '⚡' },
-  { href: '/student/matches', label: 'Find Mentors', icon: '🤝' },
-  { href: '/student/notifications', label: 'Notifications', icon: '🔔' },
-  { href: '/student/profile', label: 'Profile', icon: '👤' },
-]
+  { href: "/student", label: "Dashboard", icon: "🏠" },
+  { href: "/student/startup", label: "My Startup", icon: "🚀" },
+  { href: "/student/missions", label: "Daily Missions", icon: "⚡" },
+  { href: "/student/matches", label: "Find Mentors", icon: "🤝" },
+  { href: "/student/notifications", label: "Notifications", icon: "🔔" },
+  { href: "/student/profile", label: "Profile", icon: "👤" },
+];
 
-export default async function StudentLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
+export default async function StudentLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
-  if (!user) redirect('/sign-in')
+  if (!user) redirect("/sign-in");
 
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('rs_id, full_name, role')
-    .eq('id', user.id)
-    .single()
+    .from("profiles")
+    .select("rs_id, full_name, role")
+    .eq("id", user.id)
+    .single();
 
-  if (!profile || profile.role !== 'student') redirect('/sign-in')
+  if (!profile || profile.role !== "student") redirect("/sign-in");
 
   // Update login streak (happens in background)
-  updateLoginStreak(user.id).catch(console.error)
+  updateLoginStreak(user.id).catch(console.error);
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-950 text-white">
       <Sidebar
         role={profile.role}
         rsId={profile.rs_id}
-        fullName={profile.full_name ?? 'Student'}
+        fullName={profile.full_name ?? "Student"}
         navItems={NAV_ITEMS}
       />
       <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
-  )
+  );
 }

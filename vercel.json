@@ -7,6 +7,21 @@
     {
       "path": "/api/cron/weekly-report",
       "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/daily",
+      "schedule": "0 8 * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
     }
   ]
 }

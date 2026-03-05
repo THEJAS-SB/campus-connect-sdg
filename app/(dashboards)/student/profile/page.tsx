@@ -1,0 +1,221 @@
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+
+export default async function StudentProfilePage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) redirect('/sign-in')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile) redirect('/sign-in')
+
+  const { data: badges } = await supabase
+    .from('user_badges')
+    .select(`
+      *,
+      badges (
+        name,
+        description,
+        icon_url
+      )
+    `)
+    .eq('user_id', user.id)
+    .order('earned_at', { ascending: false })
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950 p-8">
+      <div className="mx-auto max-w-5xl space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-4xl font-bold text-white">Your Profile</h1>
+          <p className="mt-2 text-lg text-slate-400">
+            Manage your information and track your achievements
+          </p>
+        </div>
+
+        {/* Profile Card */}
+        <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+          <div className="flex items-start gap-8">
+            {/* Avatar */}
+            <div className="h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+              <div className="flex h-full w-full items-center justify-center text-6xl">
+                {profile.avatar_state === 'excited' && '🎉'}
+                {profile.avatar_state === 'celebrating' && '🏆'}
+                {profile.avatar_state === 'running' && '🚀'}
+                {profile.avatar_state === 'thinking' && '🤔'}
+                {profile.avatar_state === 'sad' && '😢'}
+                {profile.avatar_state === 'idle' && '✨'}
+              </div>
+            </div>
+
+            {/* Profile Info */}
+            <div className="flex-1 space-y-4">
+              <div>
+                <label className="text-sm font-medium text-slate-400">
+                  RS ID
+                </label>
+                <div className="mt-1 font-mono text-lg font-bold text-purple-400">
+                  {profile.rs_id}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Full Name
+                  </label>
+                  <div className="mt-1 text-lg text-white">
+                    {profile.full_name || 'Not set'}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Email
+                  </label>
+                  <div className="mt-1 text-lg text-white">{profile.email}</div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Institution
+                  </label>
+                  <div className="mt-1 text-lg text-white">
+                    {profile.institution || 'Not set'}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Department
+                  </label>
+                  <div className="mt-1 text-lg text-white">
+                    {profile.department || 'Not set'}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-slate-400">Bio</label>
+                <div className="mt-1 text-white">
+                  {profile.bio || 'Tell us about yourself...'}
+                </div>
+              </div>
+
+              {/* Skills */}
+              {profile.skills && profile.skills.length > 0 && (
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Skills
+                  </label>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {profile.skills.map((skill: string) => (
+                      <span
+                        key={skill}
+                        className="rounded-full bg-purple-500/20 px-3 py-1 text-sm text-purple-300"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* SDGs */}
+              {profile.sdgs && profile.sdgs.length > 0 && (
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    SDG Focus
+                  </label>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {profile.sdgs.map((sdg: number) => (
+                      <span
+                        key={sdg}
+                        className="rounded-full bg-blue-500/20 px-3 py-1 text-sm text-blue-300"
+                      >
+                        SDG {sdg}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Edit Button */}
+          <div className="mt-6 flex justify-end">
+            <button className="rounded-lg bg-purple-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-purple-700">
+              Edit Profile
+            </button>
+          </div>
+        </div>
+
+        {/* Badges & Achievements */}
+        <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+          <h2 className="mb-6 text-2xl font-bold text-white">
+            Badges & Achievements 🏆
+          </h2>
+          {badges && badges.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {badges.map((userBadge: any) => (
+                <div
+                  key={userBadge.id}
+                  className="flex flex-col items-center rounded-lg border border-white/10 bg-white/5 p-4 text-center"
+                >
+                  <div className="mb-2 text-4xl">
+                    {userBadge.badges.icon_url || '🎖️'}
+                  </div>
+                  <div className="text-sm font-semibold text-white">
+                    {userBadge.badges.name}
+                  </div>
+                  <div className="mt-1 text-xs text-slate-400">
+                    {userBadge.badges.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dashed border-white/20 bg-white/5 p-8 text-center">
+              <p className="text-slate-400">
+                No badges earned yet. Complete missions and milestones to unlock
+                achievements!
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Stats Summary */}
+        <div className="grid grid-cols-3 gap-6">
+          <div className="rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-purple-600/5 p-6 text-center backdrop-blur-sm">
+            <div className="text-3xl font-bold text-white">
+              {profile.innovation_score}
+            </div>
+            <div className="mt-1 text-sm text-slate-400">Innovation Score</div>
+          </div>
+
+          <div className="rounded-xl border border-green-500/20 bg-gradient-to-br from-green-500/10 to-green-600/5 p-6 text-center backdrop-blur-sm">
+            <div className="text-3xl font-bold text-white">
+              {profile.streak_count}
+            </div>
+            <div className="mt-1 text-sm text-slate-400">Day Streak</div>
+          </div>
+
+          <div className="rounded-xl border border-yellow-500/20 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-6 text-center backdrop-blur-sm">
+            <div className="text-3xl font-bold text-white">
+              {badges?.length || 0}
+            </div>
+            <div className="mt-1 text-sm text-slate-400">Badges Earned</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

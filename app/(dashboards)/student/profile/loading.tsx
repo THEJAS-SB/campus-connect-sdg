@@ -1,4 +1,4 @@
-import { ProfileSkeleton } from '@/components/shared/LoadingSkeleton'
+import { ProfileSkeleton } from "@/components/shared/LoadingSkeleton";
 
 export default function Loading() {
   return (
@@ -11,5 +11,5 @@ export default function Loading() {
         <ProfileSkeleton />
       </div>
     </div>
-  )
+  );
 }

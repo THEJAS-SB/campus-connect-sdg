@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { generateStartupEmbedding } from "@/lib/ai/embeddings";
 
@@ -50,8 +50,8 @@ export async function updateStartupStage(
     });
   }
 
-  revalidateTag("startup-data");
-  revalidateTag("student-profile");
+  revalidatePath("/student");
+  revalidatePath("/student/startup");
 }
 
 export async function upsertStartup(formData: FormData) {
@@ -118,7 +118,8 @@ export async function upsertStartup(formData: FormData) {
     });
   }
 
-  revalidateTag("startup-data");
+  revalidatePath("/student");
+  revalidatePath("/student/startup");
 }
 
 export async function completeMission(missionId: string, xpReward: number) {
@@ -142,6 +143,6 @@ export async function completeMission(missionId: string, xpReward: number) {
   // Update streak
   await supabase.rpc("update_streak", { p_user_id: user.id });
 
-  revalidateTag("missions");
-  revalidateTag("student-profile");
+  revalidatePath("/student");
+  revalidatePath("/student/startup");
 }

@@ -11,7 +11,7 @@ const ROLE_ROUTES: Record<string, string> = {
 const AUTH_PAGES = ['/sign-in', '/sign-up', '/']
 const PROTECTED_PREFIXES = ['/student', '/mentor', '/investor', '/admin']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(

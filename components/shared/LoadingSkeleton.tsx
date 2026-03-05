@@ -3,17 +3,17 @@
  */
 
 interface SkeletonProps {
-  className?: string
+  className?: string;
 }
 
-export function Skeleton({ className = '' }: SkeletonProps) {
+export function Skeleton({ className = "" }: SkeletonProps) {
   return (
     <div
       className={`animate-pulse rounded-lg bg-white/5 ${className}`}
       aria-live="polite"
       aria-busy="true"
     />
-  )
+  );
 }
 
 export function CardSkeleton() {
@@ -29,7 +29,7 @@ export function CardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function DashboardSkeleton() {
@@ -63,7 +63,7 @@ export function DashboardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
@@ -83,7 +83,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export function ChartSkeleton() {
@@ -92,7 +92,7 @@ export function ChartSkeleton() {
       <Skeleton className="mb-4 h-6 w-1/4" />
       <Skeleton className="h-[300px] w-full" />
     </div>
-  )
+  );
 }
 
 export function ProfileSkeleton() {
@@ -119,5 +119,5 @@ export function ProfileSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }

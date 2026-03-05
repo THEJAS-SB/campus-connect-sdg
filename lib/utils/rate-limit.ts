@@ -4,27 +4,30 @@
  */
 
 interface RateLimitConfig {
-  interval: number // Time window in milliseconds
-  maxRequests: number // Max requests per interval
+  interval: number; // Time window in milliseconds
+  maxRequests: number; // Max requests per interval
 }
 
 interface RateLimitRecord {
-  count: number
-  resetTime: number
+  count: number;
+  resetTime: number;
 }
 
 // In-memory store (use Redis in production)
-const rateLimitStore = new Map<string, RateLimitRecord>()
+const rateLimitStore = new Map<string, RateLimitRecord>();
 
 // Cleanup old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, record] of rateLimitStore.entries()) {
-    if (record.resetTime < now) {
-      rateLimitStore.delete(key)
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [key, record] of rateLimitStore.entries()) {
+      if (record.resetTime < now) {
+        rateLimitStore.delete(key);
+      }
     }
-  }
-}, 5 * 60 * 1000)
+  },
+  5 * 60 * 1000,
+);
 
 /**
  * Check if request should be rate limited
@@ -34,37 +37,37 @@ setInterval(() => {
  */
 export async function checkRateLimit(
   identifier: string,
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): Promise<{
-  limited: boolean
-  remaining: number
-  resetTime: number
+  limited: boolean;
+  remaining: number;
+  resetTime: number;
 }> {
-  const now = Date.now()
-  const key = `ratelimit:${identifier}`
+  const now = Date.now();
+  const key = `ratelimit:${identifier}`;
 
-  let record = rateLimitStore.get(key)
+  let record = rateLimitStore.get(key);
 
   // Create new record if doesn't exist or expired
   if (!record || record.resetTime < now) {
     record = {
       count: 0,
       resetTime: now + config.interval,
-    }
-    rateLimitStore.set(key, record)
+    };
+    rateLimitStore.set(key, record);
   }
 
   // Increment count
-  record.count++
+  record.count++;
 
-  const limited = record.count > config.maxRequests
-  const remaining = Math.max(0, config.maxRequests - record.count)
+  const limited = record.count > config.maxRequests;
+  const remaining = Math.max(0, config.maxRequests - record.count);
 
   return {
     limited,
     remaining,
     resetTime: record.resetTime,
-  }
+  };
 }
 
 /**
@@ -98,7 +101,7 @@ export const RATE_LIMITS = {
     interval: 10 * 1000, // 10 seconds
     maxRequests: 100, // 100 requests per 10 seconds
   },
-}
+};
 
 /**
  * Rate limit middleware helper for Server Actions
@@ -116,13 +119,13 @@ export const RATE_LIMITS = {
  */
 export async function requireRateLimit(
   identifier: string,
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): Promise<void> {
-  const check = await checkRateLimit(identifier, config)
+  const check = await checkRateLimit(identifier, config);
   if (check.limited) {
-    const resetIn = Math.ceil((check.resetTime - Date.now()) / 1000)
+    const resetIn = Math.ceil((check.resetTime - Date.now()) / 1000);
     throw new Error(
-      `Rate limit exceeded. Try again in ${resetIn} seconds. (Limit: ${config.maxRequests} requests per ${config.interval / 1000}s)`
-    )
+      `Rate limit exceeded. Try again in ${resetIn} seconds. (Limit: ${config.maxRequests} requests per ${config.interval / 1000}s)`,
+    );
   }
 }

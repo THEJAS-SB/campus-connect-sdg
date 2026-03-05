@@ -2,76 +2,78 @@
  * Authentication and authorization utilities for Server Actions
  */
 
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 /**
  * Get current authenticated user or throw error
  */
 export async function requireUser() {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error('Unauthorized - Please sign in')
+    throw new Error("Unauthorized - Please sign in");
   }
 
-  return user
+  return user;
 }
 
 /**
  * Get current user profile with role or throw error
  */
 export async function requireProfile(allowedRoles?: string[]) {
-  const supabase = await createClient()
-  const user = await requireUser()
+  const supabase = await createClient();
+  const user = await requireUser();
 
   const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
 
   if (error || !profile) {
-    throw new Error('Profile not found')
+    throw new Error("Profile not found");
   }
 
   // Check role if specified
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
-    throw new Error(`Access denied. Required role: ${allowedRoles.join(' or ')}`)
+    throw new Error(
+      `Access denied. Required role: ${allowedRoles.join(" or ")}`,
+    );
   }
 
-  return profile
+  return profile;
 }
 
 /**
  * Require admin role
  */
 export async function requireAdmin() {
-  return await requireProfile(['admin'])
+  return await requireProfile(["admin"]);
 }
 
 /**
  * Require mentor role
  */
 export async function requireMentor() {
-  return await requireProfile(['mentor'])
+  return await requireProfile(["mentor"]);
 }
 
 /**
  * Require investor role
  */
 export async function requireInvestor() {
-  return await requireProfile(['investor'])
+  return await requireProfile(["investor"]);
 }
 
 /**
  * Require student role
  */
 export async function requireStudent() {
-  return await requireProfile(['student'])
+  return await requireProfile(["student"]);
 }
 
 /**
@@ -79,18 +81,18 @@ export async function requireStudent() {
  */
 export async function requireOwnership(
   resourceUserId: string,
-  errorMessage = 'You do not have permission to modify this resource'
+  errorMessage = "You do not have permission to modify this resource",
 ) {
-  const user = await requireUser()
+  const user = await requireUser();
   if (user.id !== resourceUserId) {
-    throw new Error(errorMessage)
+    throw new Error(errorMessage);
   }
-  return user
+  return user;
 }
 
 /**
  * Safe redirect wrapper for Server Actions/Components
  */
 export function safeRedirect(path: string): never {
-  redirect(path)
+  redirect(path);
 }

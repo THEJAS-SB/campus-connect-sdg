@@ -43,13 +43,13 @@ export async function getInvestorPipeline() {
         domain,
         sdgs,
         funding_raised,
+        funding_goal,
         pitch_deck_url,
         demo_url,
         student_id,
         profiles!startups_student_id_fkey(
-          full_name,
-          rs_id,
-          linkedin_url
+          name:full_name,
+          avatar_url
         )
       )
     `,
@@ -59,7 +59,20 @@ export async function getInvestorPipeline() {
 
   if (error) throw new Error(`Failed to fetch pipeline: ${error.message}`);
 
-  return data ?? [];
+  // Transform Supabase join arrays to single objects
+  const transformedData = (data ?? []).map((item: any) => ({
+    ...item,
+    startups: Array.isArray(item.startups)
+      ? {
+          ...item.startups[0],
+          profiles: Array.isArray(item.startups[0]?.profiles)
+            ? item.startups[0].profiles[0] || null
+            : item.startups[0]?.profiles || null,
+        }
+      : item.startups,
+  }));
+
+  return transformedData;
 }
 
 /**
@@ -264,10 +277,15 @@ export async function discoverStartups(filters?: {
 
   if (error) throw new Error(`Failed to discover startups: ${error.message}`);
 
-  // TODO: If profile has embedding, use vector search instead
-  // For now, return filtered results
+  // Transform profiles from array to single object (Supabase join quirk)
+  const transformedStartups = (startups ?? []).map((startup: any) => ({
+    ...startup,
+    profiles: Array.isArray(startup.profiles)
+      ? startup.profiles[0] || null
+      : startup.profiles,
+  }));
 
-  return startups ?? [];
+  return transformedStartups;
 }
 
 /**

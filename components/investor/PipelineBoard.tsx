@@ -10,9 +10,11 @@ import StartupPipelineCard from "./StartupPipelineCard";
 interface PipelineEntry {
   id: string;
   startup_id: string;
-  stage: string;
+  stage: PipelineStage;
   notes?: string | null;
   investment_amount?: number | null;
+  valuation?: number | null;
+  equity_percentage?: number | null;
   startups: {
     id: string;
     name: string;
@@ -21,10 +23,11 @@ interface PipelineEntry {
     domain?: string | null;
     sdgs?: string[] | null;
     funding_raised?: number | null;
+    funding_goal?: number | null;
     pitch_deck_url?: string | null;
-    profiles: {
-      full_name: string;
-      rs_id: string;
+    profiles?: {
+      name: string;
+      avatar_url?: string | null;
     } | null;
   } | null;
 }

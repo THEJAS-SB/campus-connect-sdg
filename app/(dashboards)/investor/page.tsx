@@ -45,9 +45,12 @@ export default async function InvestorDashboard() {
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "Total Tracked", value: pipeline.length },
-            { label: "In Talks", value: analytics.by_stage.in_talks },
-            { label: "Due Diligence", value: analytics.by_stage.due_diligence },
-            { label: "Invested", value: analytics.by_stage.invested },
+            { label: "In Talks", value: analytics.byStage.in_talks || 0 },
+            {
+              label: "Due Diligence",
+              value: analytics.byStage.due_diligence || 0,
+            },
+            { label: "Invested", value: analytics.byStage.invested || 0 },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -60,11 +63,11 @@ export default async function InvestorDashboard() {
         </div>
 
         {/* Total Invested */}
-        {analytics.total_invested > 0 && (
+        {analytics.totalInvested > 0 && (
           <div className="mb-6 rounded-xl border border-green-500/20 bg-green-500/5 p-4">
             <p className="text-xs text-green-400">Total Invested</p>
             <p className="text-2xl font-bold text-green-300">
-              ${analytics.total_invested.toLocaleString()}
+              ${analytics.totalInvested.toLocaleString()}
             </p>
           </div>
         )}

@@ -50,7 +50,18 @@ export async function getMentorConnections() {
 
   if (error) throw new Error(`Failed to fetch connections: ${error.message}`);
 
-  return data ?? [];
+  // Transform Supabase join arrays to single objects
+  const transformedData = (data ?? []).map((item: any) => ({
+    ...item,
+    profiles: Array.isArray(item.profiles)
+      ? item.profiles[0] || null
+      : item.profiles,
+    startups: Array.isArray(item.startups)
+      ? item.startups[0] || null
+      : item.startups,
+  }));
+
+  return transformedData;
 }
 
 /**

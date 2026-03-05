@@ -1,37 +1,43 @@
-'use server'
+"use server";
 
-import { revalidateTag } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
-import { generateEmbedding } from '@/lib/ai/embeddings'
-import { findSimilarStartups } from '@/lib/ai/matchmaking'
-import { generateStartupGrowthInsight } from '@/lib/ai/groq'
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { generateEmbedding } from "@/lib/ai/embeddings";
+import { findSimilarStartups } from "@/lib/ai/matchmaking";
+import { generateStartupGrowthInsight } from "@/lib/ai/groq";
 
-export async function getRecommendedStartups(filters: { stage?: string; domain?: string }) {
-  const supabase = await createClient()
+export async function getRecommendedStartups(filters: {
+  stage?: string;
+  domain?: string;
+}) {
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
 
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('bio, skills, sdgs')
-    .eq('id', user.id)
-    .single()
+    .from("profiles")
+    .select("bio, skills, sdgs")
+    .eq("id", user.id)
+    .single();
 
   const thesisText = [
-    profile?.bio ?? '',
-    profile?.skills?.join(', ') ?? '',
-    (profile?.sdgs as string[] | null)?.join(', ') ?? '',
-    filters.domain ?? '',
+    profile?.bio ?? "",
+    profile?.skills?.join(", ") ?? "",
+    (profile?.sdgs as string[] | null)?.join(", ") ?? "",
+    filters.domain ?? "",
   ]
     .filter(Boolean)
-    .join('. ')
+    .join(". ");
 
-  const embedding = await generateEmbedding(thesisText)
-  if (!embedding) throw new Error('Could not generate embedding – ensure HUGGING_FACE_API_KEY is set.')
+  const embedding = await generateEmbedding(thesisText);
+  if (!embedding)
+    throw new Error(
+      "Could not generate embedding – ensure HUGGING_FACE_API_KEY is set.",
+    );
 
-  const startups = await findSimilarStartups(embedding, filters, 10)
+  const startups = await findSimilarStartups(embedding, filters, 10);
 
   // Generate growth insights for top 5
   const withInsights = await Promise.all(
@@ -45,48 +51,54 @@ export async function getRecommendedStartups(filters: { stage?: string; domain?:
             domain: s.domain,
             sdg_tags: s.sdg_tags,
           },
-          `Startup at ${s.stage ?? 'idea'} stage.`
-        )
-        return { ...s, growth_insight: insight }
+          `Startup at ${s.stage ?? "idea"} stage.`,
+        );
+        return { ...s, growth_insight: insight };
       } catch {
-        return { ...s, growth_insight: null }
+        return { ...s, growth_insight: null };
       }
-    })
-  )
+    }),
+  );
 
-  return [...withInsights, ...startups.slice(5).map((s) => ({ ...s, growth_insight: null }))]
+  return [
+    ...withInsights,
+    ...startups.slice(5).map((s) => ({ ...s, growth_insight: null })),
+  ];
 }
 
 export async function updatePipelineStage(
   startupId: string,
-  newStage: 'bookmarked' | 'in_talks' | 'due_diligence' | 'invested'
+  newStage: "bookmarked" | "in_talks" | "due_diligence" | "invested",
 ) {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
 
-  await supabase.from('investor_pipeline').upsert({
+  await supabase.from("investor_pipeline").upsert({
     investor_id: user.id,
     startup_id: startupId,
     pipeline_stage: newStage,
-  })
+  });
 
-  revalidateTag('investor-pipeline')
+  revalidatePath("/investor");
+  revalidatePath("/investor/discover");
 }
 
 export async function getInvestorPipeline() {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
 
   const { data } = await supabase
-    .from('investor_pipeline')
-    .select('*, startups(id, name, description, stage, domain, sdg_tags, funding_raised)')
-    .eq('investor_id', user.id)
+    .from("investor_pipeline")
+    .select(
+      "*, startups(id, name, description, stage, domain, sdg_tags, funding_raised)",
+    )
+    .eq("investor_id", user.id);
 
-  return data ?? []
+  return data ?? [];
 }

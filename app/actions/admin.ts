@@ -197,7 +197,7 @@ export async function getEcosystemCharts() {
  */
 export async function generateEcosystemInsight() {
   const supabase = await createClient();
-  
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

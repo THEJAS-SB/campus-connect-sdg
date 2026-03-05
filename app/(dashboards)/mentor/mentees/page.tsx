@@ -1,19 +1,22 @@
-import { getMentorConnections } from '@/app/actions/mentor'
-import Navbar from '@/components/shared/Navbar'
-import MenteeConnectionCard from '@/components/mentor/MenteeConnectionCard'
+import { getMentorConnections } from "@/app/actions/mentor";
+import Navbar from "@/components/shared/Navbar";
+import MenteeConnectionCard from "@/components/mentor/MenteeConnectionCard";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function MenteesPage() {
-  const connections = await getMentorConnections()
+  const connections = await getMentorConnections();
 
-  const active = connections.filter((c) => c.status === 'active')
-  const pending = connections.filter((c) => c.status === 'pending')
-  const completed = connections.filter((c) => c.status === 'completed')
+  const active = connections.filter((c) => c.status === "active");
+  const pending = connections.filter((c) => c.status === "pending");
+  const completed = connections.filter((c) => c.status === "completed");
 
   return (
     <div className="min-h-full">
-      <Navbar title="My Mentees" subtitle="Manage your mentorship connections" />
+      <Navbar
+        title="My Mentees"
+        subtitle="Manage your mentorship connections"
+      />
       <div className="p-6">
         {/* Stats Summary */}
         <div className="mb-6 grid grid-cols-3 gap-4">
@@ -36,7 +39,8 @@ export default async function MenteesPage() {
             <p className="text-3xl">🎓</p>
             <p className="mt-2 font-medium text-slate-300">No mentees yet</p>
             <p className="mt-1 text-sm text-slate-500">
-              Browse suggested mentees to start building your mentorship network.
+              Browse suggested mentees to start building your mentorship
+              network.
             </p>
             <a
               href="/mentor/suggested"
@@ -55,7 +59,10 @@ export default async function MenteesPage() {
                 </h2>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {pending.map((connection) => (
-                    <MenteeConnectionCard key={connection.id} connection={connection} />
+                    <MenteeConnectionCard
+                      key={connection.id}
+                      connection={connection}
+                    />
                   ))}
                 </div>
               </section>
@@ -69,7 +76,10 @@ export default async function MenteesPage() {
                 </h2>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {active.map((connection) => (
-                    <MenteeConnectionCard key={connection.id} connection={connection} />
+                    <MenteeConnectionCard
+                      key={connection.id}
+                      connection={connection}
+                    />
                   ))}
                 </div>
               </section>
@@ -83,7 +93,10 @@ export default async function MenteesPage() {
                 </h2>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {completed.map((connection) => (
-                    <MenteeConnectionCard key={connection.id} connection={connection} />
+                    <MenteeConnectionCard
+                      key={connection.id}
+                      connection={connection}
+                    />
                   ))}
                 </div>
               </section>
@@ -92,5 +105,5 @@ export default async function MenteesPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

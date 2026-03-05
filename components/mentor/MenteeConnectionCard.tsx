@@ -1,65 +1,83 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { updateMentorshipStatus } from '@/app/actions/mentor'
+import { useState, useTransition } from "react";
+import { updateMentorshipStatus } from "@/app/actions/mentor";
 
 interface MenteeConnectionCardProps {
   connection: {
-    id: string
-    student_id: string
-    startup_id?: string | null
-    compatibility_score?: number | null
-    reasoning?: string | null
-    status: string
-    created_at: string
+    id: string;
+    student_id: string;
+    startup_id?: string | null;
+    compatibility_score?: number | null;
+    reasoning?: string | null;
+    status: string;
+    created_at: string;
     profiles: {
-      id: string
-      rs_id: string
-      full_name: string
-      bio?: string | null
-      skills?: string[] | null
-      sdgs?: string[] | null
-      innovation_score?: number | null
-      linkedin_url?: string | null
-    } | null
+      id: string;
+      rs_id: string;
+      full_name: string;
+      bio?: string | null;
+      skills?: string[] | null;
+      sdgs?: string[] | null;
+      innovation_score?: number | null;
+      linkedin_url?: string | null;
+    } | null;
     startups?: {
-      id: string
-      name: string
-      stage?: string | null
-      domain?: string | null
-    } | null
-  }
+      id: string;
+      name: string;
+      stage?: string | null;
+      domain?: string | null;
+    } | null;
+  };
 }
 
-export default function MenteeConnectionCard({ connection }: MenteeConnectionCardProps) {
-  const [isPending, startTransition] = useTransition()
-  const [localStatus, setLocalStatus] = useState(connection.status)
+export default function MenteeConnectionCard({
+  connection,
+}: MenteeConnectionCardProps) {
+  const [isPending, startTransition] = useTransition();
+  const [localStatus, setLocalStatus] = useState(connection.status);
 
-  const mentee = connection.profiles
-  const startup = connection.startups
+  const mentee = connection.profiles;
+  const startup = connection.startups;
 
-  if (!mentee) return null
+  if (!mentee) return null;
 
-  const handleStatusChange = (newStatus: 'active' | 'completed' | 'cancelled') => {
+  const handleStatusChange = (
+    newStatus: "active" | "completed" | "cancelled",
+  ) => {
     startTransition(async () => {
       try {
-        await updateMentorshipStatus(connection.id, newStatus)
-        setLocalStatus(newStatus)
+        await updateMentorshipStatus(connection.id, newStatus);
+        setLocalStatus(newStatus);
       } catch (error) {
-        console.error('Failed to update status:', error)
-        alert('Failed to update status. Please try again.')
+        console.error("Failed to update status:", error);
+        alert("Failed to update status. Please try again.");
       }
-    })
-  }
+    });
+  };
 
   const statusConfig = {
-    pending: { color: 'text-yellow-400 bg-yellow-500/10 ring-yellow-500/30', label: 'Pending' },
-    active: { color: 'text-green-400 bg-green-500/10 ring-green-500/30', label: 'Active' },
-    completed: { color: 'text-blue-400 bg-blue-500/10 ring-blue-500/30', label: 'Completed' },
-    cancelled: { color: 'text-red-400 bg-red-500/10 ring-red-500/30', label: 'Cancelled' },
-  }
+    pending: {
+      color: "text-yellow-400 bg-yellow-500/10 ring-yellow-500/30",
+      label: "Pending",
+    },
+    active: {
+      color: "text-green-400 bg-green-500/10 ring-green-500/30",
+      label: "Active",
+    },
+    completed: {
+      color: "text-blue-400 bg-blue-500/10 ring-blue-500/30",
+      label: "Completed",
+    },
+    cancelled: {
+      color: "text-red-400 bg-red-500/10 ring-red-500/30",
+      label: "Cancelled",
+    },
+  };
 
-  const currentConfig = statusConfig[localStatus as keyof typeof statusConfig] || statusConfig.pending
+  const currentConfig =
+    statusConfig[localStatus as keyof typeof statusConfig] ||
+    statusConfig.pending;
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-5">
@@ -75,13 +93,17 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
             </p>
           )}
         </div>
-        <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${currentConfig.color}`}>
+        <span
+          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${currentConfig.color}`}
+        >
           {currentConfig.label}
         </span>
       </div>
 
       {/* Bio */}
-      {mentee.bio && <p className="line-clamp-2 text-sm text-slate-400">{mentee.bio}</p>}
+      {mentee.bio && (
+        <p className="line-clamp-2 text-sm text-slate-400">{mentee.bio}</p>
+      )}
 
       {/* Stats */}
       <div className="flex gap-3 text-xs">
@@ -94,7 +116,9 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
         )}
         {mentee.innovation_score && (
           <div className="rounded-lg bg-blue-500/10 px-3 py-1.5 ring-1 ring-blue-500/30">
-            <span className="text-blue-400">{mentee.innovation_score.toLocaleString()} IS</span>
+            <span className="text-blue-400">
+              {mentee.innovation_score.toLocaleString()} IS
+            </span>
           </div>
         )}
         {startup?.domain && (
@@ -121,24 +145,28 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
       {/* AI Reasoning */}
       {connection.reasoning && (
         <div className="rounded-lg bg-purple-500/5 p-3 ring-1 ring-purple-500/20">
-          <p className="mb-1 text-xs font-semibold text-purple-400">Why this match?</p>
-          <p className="text-xs leading-relaxed text-slate-300">{connection.reasoning}</p>
+          <p className="mb-1 text-xs font-semibold text-purple-400">
+            Why this match?
+          </p>
+          <p className="text-xs leading-relaxed text-slate-300">
+            {connection.reasoning}
+          </p>
         </div>
       )}
 
       {/* Actions */}
       <div className="flex gap-2">
-        {localStatus === 'pending' && (
+        {localStatus === "pending" && (
           <>
             <button
-              onClick={() => handleStatusChange('active')}
+              onClick={() => handleStatusChange("active")}
               disabled={isPending}
               className="flex-1 rounded-lg bg-green-600/20 px-3 py-2 text-xs font-medium text-green-400 ring-1 ring-green-600/30 transition hover:bg-green-600/30 disabled:opacity-50"
             >
               ✓ Accept
             </button>
             <button
-              onClick={() => handleStatusChange('cancelled')}
+              onClick={() => handleStatusChange("cancelled")}
               disabled={isPending}
               className="flex-1 rounded-lg bg-red-600/20 px-3 py-2 text-xs font-medium text-red-400 ring-1 ring-red-600/30 transition hover:bg-red-600/30 disabled:opacity-50"
             >
@@ -147,7 +175,7 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
           </>
         )}
 
-        {localStatus === 'active' && (
+        {localStatus === "active" && (
           <>
             <a
               href={`https://wa.me/?text=Hi ${encodeURIComponent(mentee.full_name)}, let's schedule our next session!`}
@@ -168,7 +196,7 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
               </a>
             )}
             <button
-              onClick={() => handleStatusChange('completed')}
+              onClick={() => handleStatusChange("completed")}
               disabled={isPending}
               className="rounded-lg bg-blue-600/20 px-3 py-2 text-xs font-medium text-blue-400 ring-1 ring-blue-600/30 transition hover:bg-blue-600/30 disabled:opacity-50"
             >
@@ -178,5 +206,5 @@ export default function MenteeConnectionCard({ connection }: MenteeConnectionCar
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,42 +1,45 @@
-import { discoverStartups } from '@/app/actions/investor'
-import Navbar from '@/components/shared/Navbar'
-import StartupCard from '@/components/investor/StartupCard'
+import { discoverStartups } from "@/app/actions/investor";
+import Navbar from "@/components/shared/Navbar";
+import StartupCard from "@/components/investor/StartupCard";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 interface PageProps {
-  searchParams: Promise<{ stage?: string; domain?: string; sdg?: string }>
+  searchParams: Promise<{ stage?: string; domain?: string; sdg?: string }>;
 }
 
 export default async function DiscoverPage({ searchParams }: PageProps) {
-  const { stage, domain, sdg } = await searchParams
+  const { stage, domain, sdg } = await searchParams;
 
-  let startups: Awaited<ReturnType<typeof discoverStartups>> = []
-  let error: string | null = null
+  let startups: Awaited<ReturnType<typeof discoverStartups>> = [];
+  let error: string | null = null;
 
   try {
     startups = await discoverStartups({
       stage,
       domain,
       sdgs: sdg ? [sdg] : undefined,
-    })
+    });
   } catch (e) {
-    error = (e as Error).message
+    error = (e as Error).message;
   }
 
   return (
     <div className="min-h-full">
-      <Navbar title="Discover Startups" subtitle="AI-matched to your investment thesis" />
+      <Navbar
+        title="Discover Startups"
+        subtitle="AI-matched to your investment thesis"
+      />
       <div className="p-6">
         {/* Filters */}
         <form className="mb-6 flex gap-3 flex-wrap">
           <select
             name="stage"
-            defaultValue={stage ?? ''}
+            defaultValue={stage ?? ""}
             className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
           >
             <option value="">All Stages</option>
-            {['idea', 'mvp', 'revenue', 'funded', 'scaling'].map((s) => (
+            {["idea", "mvp", "revenue", "funded", "scaling"].map((s) => (
               <option key={s} value={s} className="capitalize">
                 {s.charAt(0).toUpperCase() + s.slice(1)}
               </option>
@@ -44,38 +47,49 @@ export default async function DiscoverPage({ searchParams }: PageProps) {
           </select>
           <select
             name="domain"
-            defaultValue={domain ?? ''}
+            defaultValue={domain ?? ""}
             className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
           >
             <option value="">All Domains</option>
-            {['FinTech', 'EdTech', 'HealthTech', 'AgriTech', 'AI/ML', 'Web3 / Blockchain', 'SaaS', 'GreenTech'].map(
-              (d) => <option key={d} value={d}>{d}</option>
-            )}
+            {[
+              "FinTech",
+              "EdTech",
+              "HealthTech",
+              "AgriTech",
+              "AI/ML",
+              "Web3 / Blockchain",
+              "SaaS",
+              "GreenTech",
+            ].map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
           </select>
           <select
             name="sdg"
-            defaultValue={sdg ?? ''}
+            defaultValue={sdg ?? ""}
             className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
           >
             <option value="">All SDGs</option>
             {[
-              'No Poverty',
-              'Zero Hunger',
-              'Good Health',
-              'Quality Education',
-              'Gender Equality',
-              'Clean Water',
-              'Affordable Energy',
-              'Decent Work',
-              'Industry Innovation',
-              'Reduced Inequalities',
-              'Sustainable Cities',
-              'Responsible Consumption',
-              'Climate Action',
-              'Life Below Water',
-              'Life on Land',
-              'Peace and Justice',
-              'Partnerships',
+              "No Poverty",
+              "Zero Hunger",
+              "Good Health",
+              "Quality Education",
+              "Gender Equality",
+              "Clean Water",
+              "Affordable Energy",
+              "Decent Work",
+              "Industry Innovation",
+              "Reduced Inequalities",
+              "Sustainable Cities",
+              "Responsible Consumption",
+              "Climate Action",
+              "Life Below Water",
+              "Life on Land",
+              "Peace and Justice",
+              "Partnerships",
             ].map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -101,7 +115,8 @@ export default async function DiscoverPage({ searchParams }: PageProps) {
             <p className="text-3xl">🔍</p>
             <p className="mt-2 font-medium text-slate-300">No startups found</p>
             <p className="mt-1 text-sm text-slate-500">
-              Try different filters or complete your investor profile for better matches.
+              Try different filters or complete your investor profile for better
+              matches.
             </p>
           </div>
         ) : (
@@ -113,5 +128,5 @@ export default async function DiscoverPage({ searchParams }: PageProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,12 +1,14 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/shared/Sidebar'
+import { updateLoginStreak } from '@/lib/gamification/streak'
 
 const NAV_ITEMS = [
   { href: '/student', label: 'Dashboard', icon: '🏠' },
   { href: '/student/startup', label: 'My Startup', icon: '🚀' },
   { href: '/student/missions', label: 'Daily Missions', icon: '⚡' },
   { href: '/student/matches', label: 'Find Mentors', icon: '🤝' },
+  { href: '/student/notifications', label: 'Notifications', icon: '🔔' },
   { href: '/student/profile', label: 'Profile', icon: '👤' },
 ]
 
@@ -25,6 +27,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
     .single()
 
   if (!profile || profile.role !== 'student') redirect('/sign-in')
+
+  // Update login streak (happens in background)
+  updateLoginStreak(user.id).catch(console.error)
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-950 text-white">

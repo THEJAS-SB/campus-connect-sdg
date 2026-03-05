@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getMyBadges } from "@/app/actions/badges";
+import BadgeShowcase from "@/components/shared/BadgeShowcase";
+import CheckBadgesButton from "@/components/shared/CheckBadgesButton";
 
 export default async function StudentProfilePage() {
   const supabase = await createClient();
@@ -17,20 +20,8 @@ export default async function StudentProfilePage() {
 
   if (!profile) redirect("/sign-in");
 
-  const { data: badges } = await supabase
-    .from("user_badges")
-    .select(
-      `
-      *,
-      badges (
-        name,
-        description,
-        icon_url
-      )
-    `,
-    )
-    .eq("user_id", user.id)
-    .order("earned_at", { ascending: false });
+  // Get badges and progress
+  const { earned, all, progress } = await getMyBadges();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950 p-8">
@@ -164,36 +155,17 @@ export default async function StudentProfilePage() {
 
         {/* Badges & Achievements */}
         <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-          <h2 className="mb-6 text-2xl font-bold text-white">
-            Badges & Achievements 🏆
-          </h2>
-          {badges && badges.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {badges.map((userBadge: any) => (
-                <div
-                  key={userBadge.id}
-                  className="flex flex-col items-center rounded-lg border border-white/10 bg-white/5 p-4 text-center"
-                >
-                  <div className="mb-2 text-4xl">
-                    {userBadge.badges.icon_url || "🎖️"}
-                  </div>
-                  <div className="text-sm font-semibold text-white">
-                    {userBadge.badges.name}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">
-                    {userBadge.badges.description}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-dashed border-white/20 bg-white/5 p-8 text-center">
-              <p className="text-slate-400">
-                No badges earned yet. Complete missions and milestones to unlock
-                achievements!
-              </p>
-            </div>
-          )}
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white">
+              Badges & Achievements 🏆
+            </h2>
+            <CheckBadgesButton />
+          </div>
+          <BadgeShowcase 
+            userBadges={earned}
+            allBadges={all}
+            progress={progress}
+          />
         </div>
 
         {/* Stats Summary */}
@@ -214,7 +186,7 @@ export default async function StudentProfilePage() {
 
           <div className="rounded-xl border border-yellow-500/20 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-6 text-center backdrop-blur-sm">
             <div className="text-3xl font-bold text-white">
-              {badges?.length || 0}
+              {earned.length}
             </div>
             <div className="mt-1 text-sm text-slate-400">Badges Earned</div>
           </div>

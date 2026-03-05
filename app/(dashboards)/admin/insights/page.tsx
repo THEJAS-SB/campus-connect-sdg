@@ -1,27 +1,32 @@
-import { generateEcosystemInsight } from '@/app/actions/admin'
-import Navbar from '@/components/shared/Navbar'
-import InsightReport from '@/components/admin/InsightReport'
+import { generateEcosystemInsight } from "@/app/actions/admin";
+import Navbar from "@/components/shared/Navbar";
+import InsightReport from "@/components/admin/InsightReport";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function InsightsPage() {
-  let report: string | null = null
-  let error: string | null = null
+  let report: string | null = null;
+  let error: string | null = null;
 
   try {
-    report = await generateEcosystemInsight()
+    report = await generateEcosystemInsight();
   } catch (e) {
-    error = (e as Error).message
+    error = (e as Error).message;
   }
 
   return (
     <div className="min-h-full">
-      <Navbar title="AI Strategic Insights" subtitle="Weekly strategic ecosystem analysis" />
+      <Navbar
+        title="AI Strategic Insights"
+        subtitle="Weekly strategic ecosystem analysis"
+      />
       <div className="p-6">
         <div className="mb-4 rounded-lg bg-purple-500/5 p-4 ring-1 ring-purple-500/20">
           <p className="text-sm text-slate-300">
-            Strategic analysis generated weekly by <strong className="text-purple-300">Groq Llama 3.3 70B</strong>.
-            Analyzes platform activity, startup trends, and engagement metrics to surface actionable insights.
+            Strategic analysis generated weekly by{" "}
+            <strong className="text-purple-300">Groq Llama 3.3 70B</strong>.
+            Analyzes platform activity, startup trends, and engagement metrics
+            to surface actionable insights.
           </p>
         </div>
 
@@ -43,5 +48,5 @@ export default async function InsightsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

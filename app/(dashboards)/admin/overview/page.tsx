@@ -1,22 +1,22 @@
-import { getAdminKPIs, getEcosystemCharts } from '@/app/actions/admin'
-import Navbar from '@/components/shared/Navbar'
-import KPICards from '@/components/admin/KPICards'
-import EcosystemCharts from '@/components/admin/EcosystemCharts'
+import { getAdminKPIs, getEcosystemCharts } from "@/app/actions/admin";
+import Navbar from "@/components/shared/Navbar";
+import KPICards from "@/components/admin/KPICards";
+import EcosystemCharts from "@/components/admin/EcosystemCharts";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function AdminOverview() {
   const [kpis, charts] = await Promise.all([
     getAdminKPIs(),
     getEcosystemCharts(),
-  ])
+  ]);
 
   if (!kpis) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-slate-400">Failed to load dashboard data</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -28,13 +28,17 @@ export default async function AdminOverview() {
       <div className="p-6 space-y-6">
         {/* KPI Overview */}
         <div>
-          <h2 className="mb-4 text-xl font-semibold text-white">Platform Overview</h2>
+          <h2 className="mb-4 text-xl font-semibold text-white">
+            Platform Overview
+          </h2>
           <KPICards kpis={kpis} />
         </div>
 
         {/* Ecosystem Visualizations */}
         <div>
-          <h2 className="mb-4 text-xl font-semibold text-white">Ecosystem Analytics</h2>
+          <h2 className="mb-4 text-xl font-semibold text-white">
+            Ecosystem Analytics
+          </h2>
           <EcosystemCharts charts={charts} />
         </div>
 
@@ -45,7 +49,9 @@ export default async function AdminOverview() {
             className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-5 text-center transition hover:border-purple-500/50 hover:bg-purple-500/20"
           >
             <p className="text-2xl">🤖</p>
-            <p className="mt-2 font-semibold text-white">AI Strategic Insights</p>
+            <p className="mt-2 font-semibold text-white">
+              AI Strategic Insights
+            </p>
             <p className="mt-1 text-sm text-slate-400">
               Get weekly ecosystem report from Groq AI
             </p>
@@ -64,5 +70,5 @@ export default async function AdminOverview() {
         </div>
       </div>
     </div>
-  )
+  );
 }

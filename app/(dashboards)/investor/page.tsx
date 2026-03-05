@@ -1,34 +1,40 @@
-import { createClient } from '@/lib/supabase/server'
-import Navbar from '@/components/shared/Navbar'
-import PipelineBoard from '@/components/investor/PipelineBoard'
-import { getInvestorPipeline, getInvestorAnalytics } from '@/app/actions/investor'
+import { createClient } from "@/lib/supabase/server";
+import Navbar from "@/components/shared/Navbar";
+import PipelineBoard from "@/components/investor/PipelineBoard";
+import {
+  getInvestorPipeline,
+  getInvestorAnalytics,
+} from "@/app/actions/investor";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function InvestorDashboard() {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   const [{ data: profile }, pipeline, analytics] = await Promise.all([
     supabase
-      .from('profiles')
-      .select('rs_id, full_name')
-      .eq('id', user!.id)
+      .from("profiles")
+      .select("rs_id, full_name")
+      .eq("id", user!.id)
       .single(),
     getInvestorPipeline(),
     getInvestorAnalytics(),
-  ])
+  ]);
 
   return (
     <div className="min-h-full">
-      <Navbar title="Investor Dashboard" subtitle={`RS ID: ${profile?.rs_id ?? ''}`} />
+      <Navbar
+        title="Investor Dashboard"
+        subtitle={`RS ID: ${profile?.rs_id ?? ""}`}
+      />
       <div className="p-6">
         {/* Welcome */}
         <div className="mb-6 rounded-xl border border-green-500/20 bg-gradient-to-r from-green-900/30 to-slate-900/30 p-5">
           <h2 className="text-lg font-semibold text-white">
-            Welcome, {profile?.full_name?.split(' ')[0]} 💼
+            Welcome, {profile?.full_name?.split(" ")[0]} 💼
           </h2>
           <p className="mt-1 text-sm text-slate-400">
             Discover and track vetted campus startups.
@@ -38,12 +44,15 @@ export default async function InvestorDashboard() {
         {/* Stats */}
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
-            { label: 'Total Tracked', value: pipeline.length },
-            { label: 'In Talks', value: analytics.by_stage.in_talks },
-            { label: 'Due Diligence', value: analytics.by_stage.due_diligence },
-            { label: 'Invested', value: analytics.by_stage.invested },
+            { label: "Total Tracked", value: pipeline.length },
+            { label: "In Talks", value: analytics.by_stage.in_talks },
+            { label: "Due Diligence", value: analytics.by_stage.due_diligence },
+            { label: "Invested", value: analytics.by_stage.invested },
           ].map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div
+              key={stat.label}
+              className="rounded-xl border border-white/10 bg-white/5 p-4"
+            >
               <p className="text-2xl font-bold text-white">{stat.value}</p>
               <p className="text-xs text-slate-400">{stat.label}</p>
             </div>
@@ -75,5 +84,5 @@ export default async function InvestorDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

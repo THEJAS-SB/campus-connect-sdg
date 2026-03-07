@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/shared/Sidebar";
+import InteractiveGuide from "@/components/engagement/InteractiveGuide";
 import { updateLoginStreak } from "@/lib/gamification/streak";
 
 const NAV_ITEMS = [
@@ -45,6 +46,7 @@ export default async function StudentLayout({
         navItems={NAV_ITEMS}
       />
       <main className="flex-1 overflow-y-auto">{children}</main>
+      <InteractiveGuide />
     </div>
   );
 }

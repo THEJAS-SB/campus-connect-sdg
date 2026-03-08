@@ -44,6 +44,7 @@ CREATE TABLE profiles (
   avatar_state avatar_state DEFAULT 'idle',
   institution TEXT,
   department TEXT,
+  phone_number TEXT,
   bio TEXT,
   skills TEXT[], -- Array of skill strings
   interests TEXT[], -- Array of interest strings

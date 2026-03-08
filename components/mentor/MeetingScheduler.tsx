@@ -86,82 +86,82 @@ export default function MeetingScheduler({
           Meeting Title
         </label>
         <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-            placeholder="Mentorship Session"
-          />
-        </div>
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+          placeholder="Mentorship Session"
+        />
+      </div>
 
-        {/* Date & Time */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1.5 block text-xs font-medium text-slate-400">
-              Date
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-            />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-xs font-medium text-slate-400">
-              Time
-            </label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-            />
-          </div>
-        </div>
-
-        {/* Duration */}
+      {/* Date & Time */}
+      <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="mb-1.5 block text-xs font-medium text-slate-400">
-            Duration (minutes)
+            Date
           </label>
-          <select
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-          >
-            <option value="15">15 minutes</option>
-            <option value="30">30 minutes</option>
-            <option value="45">45 minutes</option>
-            <option value="60">1 hour</option>
-            <option value="90">1.5 hours</option>
-          </select>
-        </div>
-
-        {/* Notes */}
-        <div>
-          <label className="mb-1.5 block text-xs font-medium text-slate-400">
-            Notes (optional)
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-            placeholder="Topics to cover, preparation needed, etc."
           />
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={handleSchedule}
-            disabled={saving}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-purple-600/20 px-4 py-2.5 text-sm font-medium text-purple-400 ring-1 ring-purple-600/30 transition hover:bg-purple-600/30 disabled:opacity-50"
-          >
-            {saving ? "Scheduling..." : "📅 Schedule Meeting"}
-          </button>
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-slate-400">
+            Time
+          </label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+          />
         </div>
+      </div>
+
+      {/* Duration */}
+      <div>
+        <label className="mb-1.5 block text-xs font-medium text-slate-400">
+          Duration (minutes)
+        </label>
+        <select
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+        >
+          <option value="15">15 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60">1 hour</option>
+          <option value="90">1.5 hours</option>
+        </select>
+      </div>
+
+      {/* Notes */}
+      <div>
+        <label className="mb-1.5 block text-xs font-medium text-slate-400">
+          Notes (optional)
+        </label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={3}
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+          placeholder="Topics to cover, preparation needed, etc."
+        />
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={handleSchedule}
+          disabled={saving}
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-purple-600/20 px-4 py-2.5 text-sm font-medium text-purple-400 ring-1 ring-purple-600/30 transition hover:bg-purple-600/30 disabled:opacity-50"
+        >
+          {saving ? "Scheduling..." : "📅 Schedule Meeting"}
+        </button>
+      </div>
     </div>
   );
 }

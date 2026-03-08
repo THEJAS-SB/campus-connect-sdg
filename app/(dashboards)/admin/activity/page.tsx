@@ -124,7 +124,7 @@ function formatActivityMessage(type: string, metadata: any): string {
     case "profile_created":
       return "Joined the platform";
     case "startup_created":
-      return `Created startup: ${metadata?.startup_name ?? "Unknown"}`;
+      return `Created startup: ${metadata?.startup_name ?? metadata?.startup ?? "Unknown"}`;
     case "startup_updated":
       return `Updated startup to ${metadata?.stage ?? "new stage"}`;
     case "match_created":
@@ -132,9 +132,9 @@ function formatActivityMessage(type: string, metadata: any): string {
     case "match_accepted":
       return "Accepted mentorship connection";
     case "mission_completed":
-      return `Completed mission: ${metadata?.mission_title ?? "Daily task"}`;
+      return `Completed mission: ${metadata?.mission_title ?? metadata?.mission ?? "Daily task"}`;
     case "badge_earned":
-      return `Earned badge: ${metadata?.badge_name ?? "Achievement"}`;
+      return `Earned badge: ${metadata?.badge_name ?? metadata?.badge ?? "Achievement"}`;
     case "meeting_scheduled":
       return "Scheduled a meeting";
     case "pipeline_updated":

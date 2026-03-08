@@ -5,10 +5,13 @@ import { updateProfile } from '@/app/actions/student'
 
 interface ProfileEditFormProps {
   profile: {
+    email: string
     full_name: string | null
     bio: string | null
     institution: string | null
     department: string | null
+    phone_number: string | null
+    linkedin_url: string | null
     skills: string[] | null
   }
 }
@@ -60,6 +63,19 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
       </div>
 
       <div>
+        <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+          Email
+        </label>
+        <input
+          id="email"
+          name="email"
+          value={profile.email}
+          readOnly
+          className="w-full cursor-not-allowed rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-slate-300 placeholder-slate-500 outline-none"
+        />
+      </div>
+
+      <div>
         <label htmlFor="bio" className="mb-1.5 block text-sm font-medium text-slate-300">
           Bio
         </label>
@@ -95,6 +111,32 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="department"
           defaultValue={profile.department ?? ''}
           placeholder="e.g. Computer Science, Business"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="phone_number" className="mb-1.5 block text-sm font-medium text-slate-300">
+          Phone Number
+        </label>
+        <input
+          id="phone_number"
+          name="phone_number"
+          defaultValue={profile.phone_number ?? ''}
+          placeholder="e.g. +91 9876543210"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="linkedin_url" className="mb-1.5 block text-sm font-medium text-slate-300">
+          LinkedIn ID / URL
+        </label>
+        <input
+          id="linkedin_url"
+          name="linkedin_url"
+          defaultValue={profile.linkedin_url ?? ''}
+          placeholder="e.g. https://linkedin.com/in/your-id"
           className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
         />
       </div>

@@ -429,7 +429,7 @@ async function seed() {
   ];
 
   // Try with 'stage' column first, then 'pipeline_stage'
-  let pipelineInserts = pipelineData.map((p) => ({
+  const pipelineInserts = pipelineData.map((p) => ({
     investor_id: investorIds[p.investorIdx],
     startup_id: startupIds[p.startupIdx],
     stage: p.stage,
@@ -439,13 +439,13 @@ async function seed() {
   let { error: pipelineError } = await supabase.from("investor_pipeline").insert(pipelineInserts);
   if (pipelineError && pipelineError.message.includes("stage")) {
     // Migration schema uses 'pipeline_stage' instead of 'stage'
-    pipelineInserts = pipelineData.map((p) => ({
+    const altInserts = pipelineData.map((p) => ({
       investor_id: investorIds[p.investorIdx],
       startup_id: startupIds[p.startupIdx],
       pipeline_stage: p.stage,
       notes: p.notes,
     }));
-    const { error: altError } = await supabase.from("investor_pipeline").insert(pipelineInserts);
+    const { error: altError } = await supabase.from("investor_pipeline").insert(altInserts as any);
     if (altError) {
       console.error("  ✗ Failed to create pipeline entries:", altError.message);
     } else {

@@ -133,6 +133,8 @@ export async function updateProfile(formData: FormData) {
   const bio = formData.get("bio") as string;
   const institution = formData.get("institution") as string;
   const department = formData.get("department") as string;
+  const phone_number = formData.get("phone_number") as string;
+  const linkedin_url = formData.get("linkedin_url") as string;
   const skillsRaw = formData.get("skills") as string;
   const skills = skillsRaw
     ? skillsRaw
@@ -153,6 +155,24 @@ export async function updateProfile(formData: FormData) {
     .eq("id", user.id);
 
   if (error) throw new Error(`Failed to update profile: ${error.message}`);
+
+  // Optional fields: update only if columns exist in the current DB schema.
+  // Some deployed environments may not have these columns yet.
+  const { error: optionalError } = await supabase
+    .from("profiles")
+    .update({
+      phone_number: phone_number || null,
+      linkedin_url: linkedin_url || null,
+    })
+    .eq("id", user.id);
+
+  if (
+    optionalError &&
+    !optionalError.message.includes("phone_number") &&
+    !optionalError.message.includes("linkedin_url")
+  ) {
+    throw new Error(`Failed to update profile: ${optionalError.message}`);
+  }
 
   revalidatePath("/student/profile");
   revalidatePath("/student");

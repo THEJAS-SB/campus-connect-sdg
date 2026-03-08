@@ -253,7 +253,7 @@ export async function generateEcosystemInsight() {
     last_updated: new Date().toISOString(),
   });
 
-  revalidatePath("/admin");
+  // This action is called during page render, so avoid revalidation here.
   return report;
 }
 
@@ -269,8 +269,8 @@ export async function getRecentActivity(limit: number = 50) {
     .select(
       `
       id,
-      activity_type,
-      metadata,
+      activity_type:action_type,
+      metadata:action_data,
       created_at,
       profiles!activity_log_user_id_fkey(
         full_name,
@@ -339,4 +339,191 @@ export async function refreshKPICache() {
 
   revalidatePath("/admin");
   return kpis;
+}
+
+// ================================================================
+// Messaging / Broadcast Actions
+// ================================================================
+
+export type AudienceFilter = {
+  type: "individual" | "role" | "department" | "startup_founders" | "everyone";
+  value?: string; // role name, department name, or user id
+};
+
+export type Recipient = {
+  id: string;
+  full_name: string | null;
+  email: string;
+  phone_number: string | null;
+  role: string;
+  department: string | null;
+  institution: string | null;
+};
+
+/**
+ * Get distinct audience options (departments, role counts)
+ */
+export async function getAudienceOptions() {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("role, department");
+
+  if (!profiles) return { departments: [], roleCounts: {} };
+
+  const departments = [
+    ...new Set(
+      profiles
+        .map((p) => p.department)
+        .filter((d): d is string => !!d && d.trim() !== ""),
+    ),
+  ].sort();
+
+  const roleCounts = profiles.reduce(
+    (acc, p) => {
+      acc[p.role] = (acc[p.role] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  return { departments, roleCounts };
+}
+
+/**
+ * Get recipients matching the given audience filter
+ */
+export async function getMessagingRecipients(filter: AudienceFilter) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("profiles")
+    .select("id, full_name, email, phone_number, role, department, institution")
+    .order("full_name");
+
+  switch (filter.type) {
+    case "individual":
+      if (filter.value) {
+        query = query.eq("id", filter.value);
+      }
+      break;
+    case "role":
+      if (filter.value) {
+        query = query.eq("role", filter.value);
+      }
+      break;
+    case "department":
+      if (filter.value) {
+        query = query.eq("department", filter.value);
+      }
+      break;
+    case "startup_founders":
+      // Get user ids who own startups
+      const { data: startups } = await supabase
+        .from("startups")
+        .select("founder_id");
+      const founderIds = [
+        ...new Set(startups?.map((s) => s.founder_id).filter(Boolean) ?? []),
+      ];
+      if (founderIds.length > 0) {
+        query = query.in("id", founderIds);
+      } else {
+        return [];
+      }
+      break;
+    case "everyone":
+      // No filter, return all
+      break;
+  }
+
+  const { data, error } = await query;
+  if (error) throw new Error(`Failed to fetch recipients: ${error.message}`);
+  return (data ?? []) as Recipient[];
+}
+
+/**
+ * Search users by name or email for individual targeting
+ */
+export async function searchUsers(searchTerm: string) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const term = searchTerm.trim();
+  if (term.length < 2) return [];
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, phone_number, role, department, institution")
+    .or(`full_name.ilike.%${term}%,email.ilike.%${term}%`)
+    .order("full_name")
+    .limit(20);
+
+  return (data ?? []) as Recipient[];
+}
+
+/**
+ * Log a broadcast and create in-app notifications for recipients
+ */
+export async function logBroadcast(
+  subject: string,
+  body: string,
+  audienceType: AudienceFilter["type"],
+  audienceFilter: Record<string, string>,
+  recipientIds: string[],
+  channels: string[],
+) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  // Insert broadcast record
+  await supabase.from("admin_broadcasts").insert({
+    admin_id: user.id,
+    subject,
+    body,
+    audience_type: audienceType,
+    audience_filter: audienceFilter,
+    recipient_count: recipientIds.length,
+    channels,
+  });
+
+  // Create in-app notification for each recipient
+  const notifications = recipientIds.map((userId) => ({
+    user_id: userId,
+    type: "admin_broadcast" as const,
+    title: `📨 ${subject}`,
+    message: body.length > 200 ? body.slice(0, 200) + "…" : body,
+    is_read: false,
+  }));
+
+  if (notifications.length > 0) {
+    await supabase.from("notifications").insert(notifications);
+  }
+
+  revalidatePath("/admin/messaging");
+  return { success: true, recipientCount: recipientIds.length };
+}
+
+/**
+ * Get broadcast history for admin
+ */
+export async function getBroadcastHistory(limit: number = 50) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("admin_broadcasts")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw new Error(`Failed to fetch broadcasts: ${error.message}`);
+  return data ?? [];
 }

@@ -90,6 +90,22 @@ export default async function InvestorProfilePage() {
                     {profile.department || "Not set"}
                   </div>
                 </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    Phone Number
+                  </label>
+                  <div className="mt-1 text-lg text-white">
+                    {profile.phone_number || "Not set"}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-400">
+                    LinkedIn ID
+                  </label>
+                  <div className="mt-1 text-lg text-white">
+                    {profile.linkedin_url || "Not set"}
+                  </div>
+                </div>
               </div>
 
               <div>

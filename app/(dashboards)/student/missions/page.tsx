@@ -17,7 +17,7 @@ export default async function StudentMissionsPage() {
       .select("innovation_score, streak_count")
       .eq("id", user!.id)
       .single(),
-    fetchOrGenerateMissions(),
+    fetchOrGenerateMissions().catch(() => []),
   ]);
 
   const completedCount = missions.filter(

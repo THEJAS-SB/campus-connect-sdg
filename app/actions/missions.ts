@@ -13,9 +13,6 @@ export async function fetchOrGenerateMissions() {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  // Rate limit AI mission generation
-  await requireRateLimit(user.id, RATE_LIMITS.AI_GROQ_MISSIONS);
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
@@ -30,6 +27,9 @@ export async function fetchOrGenerateMissions() {
     .lt("created_at", tomorrow.toISOString());
 
   if (existing && existing.length > 0) return existing;
+
+  // Rate limit AI mission generation (only applies when actually generating)
+  await requireRateLimit(user.id, RATE_LIMITS.AI_GROQ_MISSIONS);
 
   // Fetch profile + startup for context
   const { data: profile } = await supabase

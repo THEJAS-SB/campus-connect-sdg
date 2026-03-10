@@ -31,7 +31,7 @@ export default async function StudentDashboard() {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
-    fetchOrGenerateMissions(),
+    fetchOrGenerateMissions().catch(() => []),
   ]);
 
   // Fetch competition recommendations when student has no startup

@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { signIn } from '@/app/actions/auth'
-import { SpaceBackground, GlowingCard, EnhancedButton } from '@/components/auth'
+import { SpaceBackground, GlowingCard, EnhancedButton, SpaceshipLaunch } from '@/components/auth'
 import FormField from '@/components/auth/EnhancedFormFields'
 
 interface PageProps {
@@ -12,6 +12,27 @@ interface PageProps {
 }
 
 export default function SignInPage({ searchParams }: PageProps) {
+  const [error, setError] = React.useState<string>('')
+  const [showLaunchAnimation, setShowLaunchAnimation] = useState<boolean>(false)
+
+  React.useEffect(() => {
+    const getError = async () => {
+      const params = await searchParams
+      if (params.error) {
+        setError(decodeURIComponent(params.error))
+      }
+    }
+    getError()
+  }, [searchParams])
+
+  const handleSignInClick = () => {
+    setShowLaunchAnimation(true)
+  }
+
+  const handleLaunchComplete = () => {
+    setShowLaunchAnimation(false)
+  }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -31,19 +52,6 @@ export default function SignInPage({ searchParams }: PageProps) {
       transition: { duration: 0.5 },
     },
   }
-
-  // Note: searchParams is async, but we'll handle it in a client component context
-  const [error, setError] = React.useState<string>('')
-
-  React.useEffect(() => {
-    const getError = async () => {
-      const params = await searchParams
-      if (params.error) {
-        setError(decodeURIComponent(params.error))
-      }
-    }
-    getError()
-  }, [searchParams])
 
   return (
     <>
@@ -103,7 +111,7 @@ export default function SignInPage({ searchParams }: PageProps) {
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <EnhancedButton>Sign In</EnhancedButton>
+                <EnhancedButton onClick={handleSignInClick}>Sign In</EnhancedButton>
               </motion.div>
             </form>
 
@@ -119,6 +127,12 @@ export default function SignInPage({ searchParams }: PageProps) {
           </GlowingCard>
         </motion.div>
       </div>
+
+      <SpaceshipLaunch
+        isVisible={showLaunchAnimation}
+        onComplete={handleLaunchComplete}
+      />
     </>
   )
 }
+

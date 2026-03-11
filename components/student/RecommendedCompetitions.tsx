@@ -79,7 +79,7 @@ export default function RecommendedCompetitions({
           return (
             <div
               key={c.id}
-              className="group relative flex flex-col rounded-xl border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:border-purple-500/40 hover:shadow-[0_0_24px_-4px_rgba(168,85,247,0.25)]"
+              className="group relative flex flex-col rounded-xl border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:border-sky-500/40 hover:shadow-[0_0_24px_-4px_rgba(56,189,248,0.25)]"
             >
               {/* Top row: platform badge + difficulty */}
               <div className="mb-3 flex items-center justify-between">
@@ -111,7 +111,7 @@ export default function RecommendedCompetitions({
                   {c.matchedTags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-purple-500/15 px-2 py-0.5 text-[10px] font-medium text-purple-300 ring-1 ring-purple-500/20"
+                      className="rounded-md bg-sky-500/15 px-2 py-0.5 text-[10px] font-medium text-sky-300 ring-1 ring-sky-500/20"
                     >
                       {tag}
                     </span>
@@ -134,7 +134,7 @@ export default function RecommendedCompetitions({
                   href={c.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 rounded-lg bg-purple-600 py-2 text-center text-xs font-semibold text-white transition hover:bg-purple-500"
+                  className="flex-1 rounded-lg bg-sky-500 py-2 text-center text-xs font-semibold text-white transition hover:bg-sky-400"
                 >
                   Apply Now ↗
                 </a>

@@ -18,7 +18,7 @@ export default async function StudentNotificationsPage() {
   const notifications = await getMyNotifications(50);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 p-8">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -32,7 +32,7 @@ export default async function StudentNotificationsPage() {
             <form action={markAllAsRead}>
               <button
                 type="submit"
-                className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-4 py-2 text-sm font-medium text-purple-300 transition hover:bg-purple-500/20"
+                className="rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-sm font-medium text-sky-300 transition hover:bg-sky-500/20"
               >
                 Mark All as Read
               </button>

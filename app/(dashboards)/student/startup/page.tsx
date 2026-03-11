@@ -58,7 +58,7 @@ export default async function StartupPage() {
                 required
                 defaultValue={startup?.name ?? ''}
                 placeholder="e.g. EduBridge"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none"
               />
             </div>
 
@@ -69,7 +69,7 @@ export default async function StartupPage() {
                 rows={3}
                 defaultValue={startup?.description ?? ''}
                 placeholder="What problem do you solve? Who is your target user?"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none"
               />
             </div>
 
@@ -78,7 +78,7 @@ export default async function StartupPage() {
               <select
                 name="domain"
                 defaultValue={startup?.domain ?? ''}
-                className="w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-sky-500 focus:outline-none"
               >
                 <option value="">Select domain…</option>
                 {DOMAIN_OPTIONS.map((d) => <option key={d} value={d}>{d}</option>)}
@@ -93,13 +93,13 @@ export default async function StartupPage() {
                 name="sdg_tags"
                 defaultValue={startup?.sdg_tags?.join(', ') ?? ''}
                 placeholder="SDG 4: Quality Education, SDG 9: Industry & Innovation"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700"
+              className="w-full rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-400"
             >
               {startup ? 'Save Changes' : 'Register Startup'}
             </button>

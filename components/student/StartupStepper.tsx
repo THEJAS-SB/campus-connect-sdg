@@ -39,7 +39,7 @@ export default function StartupStepper({ startupId, currentStage, startupName }:
           <p className="text-xs text-slate-400">Startup Journey</p>
         </div>
         {isPending && (
-          <span className="text-xs text-purple-400 animate-pulse">Updating…</span>
+          <span className="text-xs text-sky-400 animate-pulse">Updating…</span>
         )}
       </div>
 
@@ -47,7 +47,7 @@ export default function StartupStepper({ startupId, currentStage, startupName }:
         {/* Connector line */}
         <div className="absolute left-0 right-0 top-5 h-0.5 bg-white/10" />
         <div
-          className="absolute left-0 top-5 h-0.5 bg-purple-500 transition-all duration-500"
+          className="absolute left-0 top-5 h-0.5 bg-sky-500 transition-all duration-500"
           style={{ width: `${(currentIndex / (STAGE_ORDER.length - 1)) * 100}%` }}
         />
 
@@ -69,11 +69,11 @@ export default function StartupStepper({ startupId, currentStage, startupName }:
               <div
                 className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm transition-all ${
                   isDone
-                    ? 'border-purple-500 bg-purple-600'
+                    ? 'border-sky-500 bg-sky-600'
                     : isCurrent
-                    ? 'border-purple-400 bg-purple-500 ring-4 ring-purple-500/30'
+                    ? 'border-sky-400 bg-sky-500 ring-4 ring-sky-500/30'
                     : isNext
-                    ? 'border-slate-500 bg-slate-800 hover:border-purple-400'
+                    ? 'border-slate-500 bg-slate-800 hover:border-sky-400'
                     : 'border-slate-700 bg-slate-900 opacity-50'
                 }`}
               >
@@ -82,7 +82,7 @@ export default function StartupStepper({ startupId, currentStage, startupName }:
               <span
                 className={`text-xs font-medium ${
                   isCurrent
-                    ? 'text-purple-300'
+                    ? 'text-sky-300'
                     : isDone
                     ? 'text-slate-300'
                     : 'text-slate-500'
@@ -96,8 +96,8 @@ export default function StartupStepper({ startupId, currentStage, startupName }:
       </div>
 
       {/* Current stage details */}
-      <div className="mt-5 rounded-lg bg-purple-500/10 px-4 py-3 ring-1 ring-purple-500/20">
-        <p className="text-sm font-medium text-purple-300">
+      <div className="mt-5 rounded-lg bg-sky-500/10 px-4 py-3 ring-1 ring-sky-500/20">
+        <p className="text-sm font-medium text-sky-300">
           Current stage: {STAGES[currentIndex].label}
         </p>
         <p className="mt-0.5 text-xs text-slate-400">

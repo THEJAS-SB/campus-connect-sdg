@@ -15,7 +15,7 @@ const STATE_CONFIG: Record<
   idle: { emoji: '✨', gradient: 'from-slate-600 to-slate-700', ring: 'ring-slate-500/30', label: 'Idle' },
   excited: { emoji: '🎯', gradient: 'from-yellow-500 to-orange-500', ring: 'ring-orange-500/40', label: 'Excited' },
   running: { emoji: '🚀', gradient: 'from-green-500 to-emerald-600', ring: 'ring-green-500/40', label: 'Running' },
-  celebrating: { emoji: '🏆', gradient: 'from-purple-500 to-pink-500', ring: 'ring-purple-500/40', label: 'Celebrating' },
+  celebrating: { emoji: '🏆', gradient: 'from-sky-500 to-blue-500', ring: 'ring-sky-500/40', label: 'Celebrating' },
   sad: { emoji: '😔', gradient: 'from-blue-600 to-blue-800', ring: 'ring-blue-500/30', label: 'Sad' },
 }
 
@@ -38,7 +38,7 @@ export default function DynamicAvatar({ state, innovationScore, streakDays }: Dy
         className={`relative flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br ${config.gradient} p-[3px] shadow-2xl ring-4 ${config.ring} transition-all duration-500`}
       >
         <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-950/70">
-          <span className="text-5xl" style={{ filter: 'drop-shadow(0 0 8px rgba(168,85,247,0.5))' }}>
+          <span className="text-5xl" style={{ filter: 'drop-shadow(0 0 8px rgba(56,189,248,0.5))' }}>
             {config.emoji}
           </span>
         </div>

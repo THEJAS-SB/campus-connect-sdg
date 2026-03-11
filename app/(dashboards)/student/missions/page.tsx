@@ -32,7 +32,7 @@ export default async function StudentMissionsPage() {
       />
       <div className="p-6">
         <div className="mb-6 grid grid-cols-3 gap-4">
-          <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-4 text-center">
+          <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-4 text-center">
             <p className="text-2xl font-bold text-white">
               {(profile?.innovation_score ?? 0).toLocaleString()}
             </p>

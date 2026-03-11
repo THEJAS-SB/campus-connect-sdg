@@ -25,7 +25,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
       <div className="mt-6 flex justify-end">
         <button
           onClick={() => setEditing(true)}
-          className="rounded-lg bg-purple-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-purple-700"
+          className="rounded-lg bg-sky-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
         >
           Edit Profile
         </button>
@@ -58,7 +58,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="full_name"
           defaultValue={profile.full_name ?? ''}
           placeholder="Your full name"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -85,7 +85,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           rows={3}
           defaultValue={profile.bio ?? ''}
           placeholder="Tell us about yourself and your interests..."
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -98,7 +98,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="institution"
           defaultValue={profile.institution ?? ''}
           placeholder="e.g. MIT, Stanford University"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -111,7 +111,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="department"
           defaultValue={profile.department ?? ''}
           placeholder="e.g. Computer Science, Business"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -124,7 +124,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="phone_number"
           defaultValue={profile.phone_number ?? ''}
           placeholder="e.g. +91 9876543210"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -137,7 +137,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="linkedin_url"
           defaultValue={profile.linkedin_url ?? ''}
           placeholder="e.g. https://linkedin.com/in/your-id"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -150,7 +150,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           name="skills"
           defaultValue={profile.skills?.join(', ') ?? ''}
           placeholder="e.g. React, Python, Machine Learning"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
@@ -158,7 +158,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-purple-600 px-6 py-2 text-sm font-semibold text-white transition hover:bg-purple-700 disabled:opacity-50"
+          className="rounded-lg bg-sky-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-sky-400 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </button>

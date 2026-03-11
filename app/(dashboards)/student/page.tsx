@@ -48,7 +48,7 @@ export default async function StudentDashboard() {
 
       <div className="p-6">
         {/* Welcome Banner */}
-        <div className="mb-6 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-900/30 to-slate-900/30 p-5">
+        <div className="mb-6 rounded-xl border border-sky-500/20 bg-gradient-to-r from-sky-900/30 to-slate-900/30 p-5">
           <h2 className="text-lg font-semibold text-white">
             Welcome back, {profile?.full_name?.split(" ")[0] ?? "Student"} 👋
           </h2>
@@ -59,7 +59,7 @@ export default async function StudentDashboard() {
 
         {/* Quick stats */}
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
+          <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-4">
             <p className="text-xl font-bold text-white">
               {(profile?.innovation_score ?? 0).toLocaleString()}
             </p>
@@ -134,7 +134,7 @@ export default async function StudentDashboard() {
             ) : (
               <div className="space-y-5">
                 {/* Cold-start welcome */}
-                <div className="rounded-xl border border-dashed border-purple-500/30 bg-linear-to-br from-purple-900/20 to-slate-900/20 p-6 text-center">
+                <div className="rounded-xl border border-dashed border-sky-500/30 bg-linear-to-br from-sky-900/20 to-slate-900/20 p-6 text-center">
                   <p className="text-3xl">🚀</p>
                   <p className="mt-2 font-semibold text-white">
                     Ready to build your Innovation Score?
@@ -145,7 +145,7 @@ export default async function StudentDashboard() {
                   </p>
                   <a
                     href="/student/startup"
-                    className="mt-4 inline-block rounded-lg bg-purple-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-purple-500"
+                    className="mt-4 inline-block rounded-lg bg-sky-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
                   >
                     Register Startup
                   </a>

@@ -75,7 +75,7 @@ export default function DailyMissions({ missions }: DailyMissionsProps) {
                 className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition ${
                   done
                     ? "border-green-500 bg-green-600 text-white"
-                    : "border-slate-500 hover:border-purple-400"
+                    : "border-slate-500 hover:border-sky-400"
                 }`}
               >
                 {done && (

@@ -88,12 +88,15 @@ export async function addToPipeline(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  const { error } = await supabase.from("investor_pipeline").upsert({
-    investor_id: user.id,
-    startup_id: startupId,
-    stage,
-    notes: notes || null,
-  });
+  const { error } = await supabase.from("investor_pipeline").upsert(
+    {
+      investor_id: user.id,
+      startup_id: startupId,
+      stage,
+      notes: notes || null,
+    },
+    { onConflict: "investor_id,startup_id" },
+  );
 
   if (error) throw new Error(`Failed to add to pipeline: ${error.message}`);
 
@@ -223,10 +226,10 @@ export async function discoverStartups(filters?: {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  // Get investor profile for embedding-based matching
+  // Get investor profile for matching context
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, full_name, bio, skills, sdgs, embedding, investment_thesis")
+    .select("id, full_name, bio, skills, sdgs")
     .eq("id", user.id)
     .single();
 
@@ -294,7 +297,9 @@ export async function getStartupGrowthInsight(startupId: string) {
 
   const { data: startup } = await supabase
     .from("startups")
-    .select("id, name:title, description, stage, domain, sdg_tags:sdgs, created_at, updated_at")
+    .select(
+      "id, name:title, description, stage, domain, sdg_tags:sdgs, created_at, updated_at",
+    )
     .eq("id", startupId)
     .single();
 
@@ -359,4 +364,67 @@ export async function getInvestorAnalytics() {
     totalInvested,
     totalStartups: pipeline.length,
   };
+}
+
+/**
+ * Update the authenticated investor's profile fields.
+ */
+export async function updateInvestorProfile(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const full_name = formData.get("full_name") as string;
+  const bio = formData.get("bio") as string;
+  const institution = formData.get("institution") as string;
+  const department = formData.get("department") as string;
+  const phone_number = formData.get("phone_number") as string;
+  const linkedin_url = formData.get("linkedin_url") as string;
+
+  const skillsRaw = formData.get("skills") as string;
+  const skills = skillsRaw
+    ? skillsRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  const interestsRaw = formData.get("interests") as string;
+  const interests = interestsRaw
+    ? interestsRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  const sdgsRaw = formData.get("sdgs") as string;
+  const sdgs = sdgsRaw
+    ? sdgsRaw
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !isNaN(n) && n >= 1 && n <= 17)
+    : [];
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      full_name: full_name || null,
+      bio: bio || null,
+      institution: institution || null,
+      department: department || null,
+      phone_number: phone_number || null,
+      linkedin_url: linkedin_url || null,
+      skills: skills.length > 0 ? skills : null,
+      interests: interests.length > 0 ? interests : null,
+      sdgs: sdgs.length > 0 ? sdgs : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) throw new Error(`Failed to update profile: ${error.message}`);
+
+  revalidatePath("/investor/profile");
+  revalidatePath("/investor");
 }

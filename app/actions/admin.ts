@@ -527,3 +527,57 @@ export async function getBroadcastHistory(limit: number = 50) {
   if (error) throw new Error(`Failed to fetch broadcasts: ${error.message}`);
   return data ?? [];
 }
+
+/**
+ * Update the authenticated admin's profile fields.
+ */
+export async function updateAdminProfile(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const full_name = formData.get("full_name") as string;
+  const bio = formData.get("bio") as string;
+  const institution = formData.get("institution") as string;
+  const department = formData.get("department") as string;
+  const phone_number = formData.get("phone_number") as string;
+  const linkedin_url = formData.get("linkedin_url") as string;
+
+  const skillsRaw = formData.get("skills") as string;
+  const skills = skillsRaw
+    ? skillsRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  const interestsRaw = formData.get("interests") as string;
+  const interests = interestsRaw
+    ? interestsRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      full_name: full_name || null,
+      bio: bio || null,
+      institution: institution || null,
+      department: department || null,
+      phone_number: phone_number || null,
+      linkedin_url: linkedin_url || null,
+      skills: skills.length > 0 ? skills : null,
+      interests: interests.length > 0 ? interests : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) throw new Error(`Failed to update profile: ${error.message}`);
+
+  revalidatePath("/admin/profile");
+  revalidatePath("/admin");
+}

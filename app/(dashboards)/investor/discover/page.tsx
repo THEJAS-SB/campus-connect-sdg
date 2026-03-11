@@ -1,6 +1,8 @@
 import { discoverStartups } from "@/app/actions/investor";
 import Navbar from "@/components/shared/Navbar";
 import StartupCard from "@/components/investor/StartupCard";
+import DiscoverFilters from "@/components/investor/DiscoverFilters";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -32,77 +34,13 @@ export default async function DiscoverPage({ searchParams }: PageProps) {
       />
       <div className="p-6">
         {/* Filters */}
-        <form className="mb-6 flex gap-3 flex-wrap">
-          <select
-            name="stage"
-            defaultValue={stage ?? ""}
-            className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
-          >
-            <option value="">All Stages</option>
-            {["idea", "mvp", "revenue", "funded", "scaling"].map((s) => (
-              <option key={s} value={s} className="capitalize">
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </option>
-            ))}
-          </select>
-          <select
-            name="domain"
-            defaultValue={domain ?? ""}
-            className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
-          >
-            <option value="">All Domains</option>
-            {[
-              "FinTech",
-              "EdTech",
-              "HealthTech",
-              "AgriTech",
-              "AI/ML",
-              "Web3 / Blockchain",
-              "SaaS",
-              "GreenTech",
-            ].map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-          <select
-            name="sdg"
-            defaultValue={sdg ?? ""}
-            className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
-          >
-            <option value="">All SDGs</option>
-            {[
-              "No Poverty",
-              "Zero Hunger",
-              "Good Health",
-              "Quality Education",
-              "Gender Equality",
-              "Clean Water",
-              "Affordable Energy",
-              "Decent Work",
-              "Industry Innovation",
-              "Reduced Inequalities",
-              "Sustainable Cities",
-              "Responsible Consumption",
-              "Climate Action",
-              "Life Below Water",
-              "Life on Land",
-              "Peace and Justice",
-              "Partnerships",
-            ].map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700"
-          >
-            Search
-          </button>
-        </form>
+        <Suspense
+          fallback={
+            <div className="mb-6 h-10 animate-pulse rounded-lg bg-white/5" />
+          }
+        >
+          <DiscoverFilters />
+        </Suspense>
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-sm text-red-400 ring-1 ring-red-500/20">

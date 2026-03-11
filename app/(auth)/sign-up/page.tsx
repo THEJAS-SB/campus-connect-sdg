@@ -1,55 +1,59 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { signUp } from '@/app/actions/auth'
-import { SpaceBackground, GlowingCard, EnhancedButton } from '@/components/auth'
-import FormField from '@/components/auth/EnhancedFormFields'
+import React from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { signUp } from "@/app/actions/auth";
+import {
+  SpaceBackground,
+  GlowingCard,
+  EnhancedButton,
+} from "@/components/auth";
+import FormField from "@/components/auth/EnhancedFormFields";
 
 interface PageProps {
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string }>;
 }
 
 const ROLES = [
   {
-    value: 'student',
-    label: 'Student',
-    description: 'Build startups, earn XP, find mentors',
-    icon: '🎓',
+    value: "student",
+    label: "Student",
+    description: "Build startups, earn XP, find mentors",
+    icon: "🎓",
   },
   {
-    value: 'mentor',
-    label: 'Mentor',
-    description: 'Guide the next generation of founders',
-    icon: '🧑‍🏫',
+    value: "mentor",
+    label: "Mentor",
+    description: "Guide the next generation of founders",
+    icon: "🧑‍🏫",
   },
   {
-    value: 'investor',
-    label: 'Investor',
-    description: 'Discover vetted campus startups',
-    icon: '💼',
+    value: "investor",
+    label: "Investor",
+    description: "Discover vetted campus startups",
+    icon: "💼",
   },
   {
-    value: 'admin',
-    label: 'Admin',
-    description: 'Manage and analyse the ecosystem',
-    icon: '🏛️',
+    value: "admin",
+    label: "Admin",
+    description: "Manage and analyse the ecosystem",
+    icon: "🏛️",
   },
-]
+];
 
 export default function SignUpPage({ searchParams }: PageProps) {
-  const [error, setError] = React.useState<string>('')
+  const [error, setError] = React.useState<string>("");
 
   React.useEffect(() => {
     const getError = async () => {
-      const params = await searchParams
+      const params = await searchParams;
       if (params.error) {
-        setError(decodeURIComponent(params.error))
+        setError(decodeURIComponent(params.error));
       }
-    }
-    getError()
-  }, [searchParams])
+    };
+    getError();
+  }, [searchParams]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -60,7 +64,7 @@ export default function SignUpPage({ searchParams }: PageProps) {
         delayChildren: 0.3,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -69,7 +73,7 @@ export default function SignUpPage({ searchParams }: PageProps) {
       y: 0,
       transition: { duration: 0.5 },
     },
-  }
+  };
 
   return (
     <>
@@ -92,7 +96,10 @@ export default function SignUpPage({ searchParams }: PageProps) {
               </motion.p>
             </motion.div>
 
-            <motion.h2 variants={itemVariants} className="mb-6 text-xl font-semibold text-white">
+            <motion.h2
+              variants={itemVariants}
+              className="mb-6 text-xl font-semibold text-white"
+            >
               Create your account
             </motion.h2>
 
@@ -154,19 +161,23 @@ export default function SignUpPage({ searchParams }: PageProps) {
                         type="radio"
                         name="role"
                         value={role.value}
-                        defaultChecked={role.value === 'student'}
+                        defaultChecked={role.value === "student"}
                         className="absolute opacity-0"
                       />
                       <span className="text-lg">{role.icon}</span>
-                      <span className="text-sm font-semibold text-white">{role.label}</span>
-                      <span className="text-xs text-slate-400 leading-tight">{role.description}</span>
+                      <span className="text-sm font-semibold text-white">
+                        {role.label}
+                      </span>
+                      <span className="text-xs text-slate-400 leading-tight">
+                        {role.description}
+                      </span>
                     </label>
                   ))}
                 </div>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <EnhancedButton>Create Account &amp; Get RS ID</EnhancedButton>
+                <EnhancedButton>Create Account</EnhancedButton>
               </motion.div>
             </form>
 
@@ -174,8 +185,11 @@ export default function SignUpPage({ searchParams }: PageProps) {
               variants={itemVariants}
               className="mt-6 text-center text-sm text-slate-400"
             >
-              Already have an account?{' '}
-              <Link href="/sign-in" className="font-medium text-purple-400 hover:text-purple-300 transition">
+              Already have an account?{" "}
+              <Link
+                href="/sign-in"
+                className="font-medium text-purple-400 hover:text-purple-300 transition"
+              >
                 Sign in
               </Link>
             </motion.p>
@@ -183,6 +197,5 @@ export default function SignUpPage({ searchParams }: PageProps) {
         </motion.div>
       </div>
     </>
-  )
+  );
 }
-

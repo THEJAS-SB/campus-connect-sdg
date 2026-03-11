@@ -8,9 +8,15 @@ import {
 } from "@/app/actions/generate-assistant-greeting";
 
 /* ── Storage key helpers (namespaced per user) ── */
-function tourCompletedKey(uid: string) { return `innovex-tour-completed-${uid}`; }
-function tourStepKey(uid: string) { return `innovex-tour-step-${uid}`; }
-function sessionGreetedKey(uid: string) { return `innovex-session-greeted-${uid}`; }
+function tourCompletedKey(uid: string) {
+  return `innovex-tour-completed-${uid}`;
+}
+function tourStepKey(uid: string) {
+  return `innovex-tour-step-${uid}`;
+}
+function sessionGreetedKey(uid: string) {
+  return `innovex-session-greeted-${uid}`;
+}
 
 /* ── Tour steps (first-time users) ── */
 interface TourStep {
@@ -119,10 +125,7 @@ export function useGuideBot() {
           localStorage.getItem(tourStepKey(uid)) ?? "0",
           10,
         );
-        const step = Math.min(
-          Math.max(saved, 0),
-          TOUR_STEPS.length - 1,
-        );
+        const step = Math.min(Math.max(saved, 0), TOUR_STEPS.length - 1);
         setTourStep(step);
         setIsTourMode(true);
 
@@ -173,7 +176,8 @@ export function useGuideBot() {
       const timer = setTimeout(() => {
         setBubbleOpen(true);
       }, 7000);
-      return () => clearTimeout(timer);    } else if (visitedStepPageRef.current) {
+      return () => clearTimeout(timer);
+    } else if (visitedStepPageRef.current) {
       // User navigated AWAY after visiting → advance to next step
       visitedStepPageRef.current = false;
       doAdvanceTour();
@@ -229,7 +233,7 @@ export function useGuideBot() {
 
   const dismiss = useCallback(() => {
     setBubbleOpen(false);
-    // If tour is over, clear the message so the notification dot disappears
+    // Clear the message so the dot disappears (for non-tour messages including nudges)
     if (!isTourMode) {
       setCurrentMessage(null);
     }
@@ -241,8 +245,41 @@ export function useGuideBot() {
       setBubbleOpen(true);
       return;
     }
+    // If bubble is closed and there's no current message, inject an idle nudge
+    if (!bubbleOpen && !currentMessage) {
+      const nudges = [
+        {
+          message:
+            "Want to try something new? 🌟 Check out today's missions and earn some XP!",
+          ctaText: "View Missions",
+          ctaLink: "/student/missions",
+        },
+        {
+          message:
+            "Have you explored all the competitions available to you? 🏆 There might be a perfect fit!",
+          ctaText: "View Competitions",
+          ctaLink: "/student/competitions",
+        },
+        {
+          message:
+            "Your mentor match is waiting! 🤝 Connect with someone who can accelerate your journey.",
+          ctaText: "Find Mentors",
+          ctaLink: "/student/matches",
+        },
+        {
+          message:
+            "How's your startup coming along? 🚀 Level it up and attract investors!",
+          ctaText: "My Startup",
+          ctaLink: "/student/startup",
+        },
+      ];
+      const nudge = nudges[Math.floor(Math.random() * nudges.length)];
+      setCurrentMessage(nudge);
+      setBubbleOpen(true);
+      return;
+    }
     setBubbleOpen((prev) => !prev);
-  }, [isTourMode, onStepPage]);
+  }, [isTourMode, onStepPage, bubbleOpen, currentMessage]);
 
   const skipTour = useCallback(() => {
     const uid = userIdRef.current;

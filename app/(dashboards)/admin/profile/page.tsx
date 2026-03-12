@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
 import AdminProfileEditForm from "@/components/admin/AdminProfileEditForm";
+import AvatarUpload from "@/components/student/AvatarUpload";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export default async function AdminProfilePage() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "rs_id, email, full_name, bio, institution, department, phone_number, linkedin_url, skills, interests, role, created_at",
+      "rs_id, email, full_name, bio, institution, department, phone_number, linkedin_url, skills, interests, role, created_at, avatar_url",
     )
     .eq("id", user.id)
     .single();
@@ -43,8 +44,8 @@ export default async function AdminProfilePage() {
         <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
           <div className="flex items-start gap-8">
             {/* Avatar */}
-            <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-purple-500/30 bg-linear-to-br from-purple-500/20 to-violet-500/20 text-5xl">
-              🛡️
+            <div className="shrink-0 w-52">
+              <AvatarUpload currentAvatarUrl={profile.avatar_url ?? null} />
             </div>
 
             {/* Info */}

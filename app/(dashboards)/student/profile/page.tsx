@@ -4,6 +4,7 @@ import { getMyBadges } from "@/app/actions/badges";
 import BadgeShowcase from "@/components/shared/BadgeShowcase";
 import CheckBadgesButton from "@/components/shared/CheckBadgesButton";
 import ProfileEditForm from "@/components/student/ProfileEditForm";
+import AvatarUpload from "@/components/student/AvatarUpload";
 
 export default async function StudentProfilePage() {
   const supabase = await createClient();
@@ -39,15 +40,8 @@ export default async function StudentProfilePage() {
         <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
           <div className="flex items-start gap-8">
             {/* Avatar */}
-            <div className="h-32 w-32 flex-shrink-0 overflow-hidden rounded-full border-4 border-sky-500/30 bg-gradient-to-br from-sky-500/20 to-blue-500/20">
-              <div className="flex h-full w-full items-center justify-center text-6xl">
-                {profile.avatar_state === "excited" && "🎉"}
-                {profile.avatar_state === "celebrating" && "🏆"}
-                {profile.avatar_state === "running" && "🚀"}
-                {profile.avatar_state === "thinking" && "🤔"}
-                {profile.avatar_state === "sad" && "😢"}
-                {profile.avatar_state === "idle" && "✨"}
-              </div>
+            <div className="flex-shrink-0 w-52">
+              <AvatarUpload currentAvatarUrl={profile.avatar_url ?? null} />
             </div>
 
             {/* Profile Info */}
@@ -165,7 +159,18 @@ export default async function StudentProfilePage() {
           </div>
 
           {/* Edit Profile */}
-          <ProfileEditForm profile={{ email: profile.email, full_name: profile.full_name, bio: profile.bio, institution: profile.institution, department: profile.department, phone_number: profile.phone_number, linkedin_url: profile.linkedin_url, skills: profile.skills }} />
+          <ProfileEditForm
+            profile={{
+              email: profile.email,
+              full_name: profile.full_name,
+              bio: profile.bio,
+              institution: profile.institution,
+              department: profile.department,
+              phone_number: profile.phone_number,
+              linkedin_url: profile.linkedin_url,
+              skills: profile.skills,
+            }}
+          />
         </div>
 
         {/* Badges & Achievements */}

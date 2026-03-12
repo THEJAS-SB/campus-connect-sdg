@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/shared/Navbar";
 import InvestorProfileEditForm from "@/components/investor/InvestorProfileEditForm";
+import AvatarUpload from "@/components/student/AvatarUpload";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +44,8 @@ export default async function InvestorProfilePage() {
         <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
           <div className="flex items-start gap-8">
             {/* Avatar */}
-            <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-green-500/30 bg-linear-to-br from-green-500/20 to-emerald-500/20 text-5xl">
-              💼
+            <div className="flex-shrink-0 w-52">
+              <AvatarUpload currentAvatarUrl={profile.avatar_url ?? null} />
             </div>
 
             {/* Info */}

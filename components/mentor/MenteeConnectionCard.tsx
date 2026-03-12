@@ -43,7 +43,7 @@ export default function MenteeConnectionCard({
   if (!mentee) return null;
 
   const handleStatusChange = (
-    newStatus: "active" | "completed" | "cancelled",
+    newStatus: "active" | "completed" | "declined",
   ) => {
     startTransition(async () => {
       try {
@@ -69,9 +69,9 @@ export default function MenteeConnectionCard({
       color: "text-blue-400 bg-blue-500/10 ring-blue-500/30",
       label: "Completed",
     },
-    cancelled: {
+    declined: {
       color: "text-red-400 bg-red-500/10 ring-red-500/30",
-      label: "Cancelled",
+      label: "Declined",
     },
   };
 
@@ -166,7 +166,7 @@ export default function MenteeConnectionCard({
               ✓ Accept
             </button>
             <button
-              onClick={() => handleStatusChange("cancelled")}
+              onClick={() => handleStatusChange("declined")}
               disabled={isPending}
               className="flex-1 rounded-lg bg-red-600/20 px-3 py-2 text-xs font-medium text-red-400 ring-1 ring-red-600/30 transition hover:bg-red-600/30 disabled:opacity-50"
             >

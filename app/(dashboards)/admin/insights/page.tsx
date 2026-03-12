@@ -24,9 +24,9 @@ export default async function InsightsPage() {
         <div className="mb-4 rounded-lg bg-purple-500/5 p-4 ring-1 ring-purple-500/20">
           <p className="text-sm text-slate-300">
             Strategic analysis generated weekly by{" "}
-            <strong className="text-purple-300">Groq Llama 3.3 70B</strong>.
-            Analyzes platform activity, startup trends, and engagement metrics
-            to surface actionable insights.
+            <strong className="text-purple-300">Llama 3.3 70B</strong>. Analyzes
+            platform activity, startup trends, and engagement metrics to surface
+            actionable insights.
           </p>
         </div>
 

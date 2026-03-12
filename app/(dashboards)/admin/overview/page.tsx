@@ -53,7 +53,7 @@ export default async function AdminOverview() {
               AI Strategic Insights
             </p>
             <p className="mt-1 text-sm text-slate-400">
-              Get weekly ecosystem report from Groq AI
+              Get weekly ecosystem report from AI
             </p>
           </a>
 
